@@ -2,6 +2,7 @@ QT -= gui
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
+QMAKE_CXXFLAGS += -std=c++11
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -28,11 +29,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
-    settings.ini
+    settings.ini \
+    ../../build-QtGame-Desktop-Debug/debug/settings.ini
 
 HEADERS += \
     Bee.h \
     Cloud.h \
     Enemy.h \
     Game.h \
-    GameItem.h
+    GameItem.h \
+    Initialization.h

@@ -2,7 +2,7 @@
 #include "GameItem.h"
 #include "Bee.h"
 #include "Enemy.h"
-enum Level { FIRST, SECOND };
+enum Level { FIRST = 1, SECOND = 2 };
 class Game
 {
 	Game();
@@ -26,8 +26,14 @@ public:
 	void Draw();
 	void Move();
 	int width() const { return _width; }
-	int heidht() const { return _height; }
+    int height() const { return _height; }
+    int score() const { return _score; }
 	bool play() const { return _play; }
 	Level level() const { return _level; }
+    void height(int height) { _height = height; }
+    void width(int width) { _width = width; }
+    void score(int score) { _score = score; }
+    void play(bool play) { _play = play; }
+    void level(Level level) { _level = level; }
 };
 
