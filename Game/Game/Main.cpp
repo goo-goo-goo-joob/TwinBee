@@ -5,6 +5,11 @@
 #include <iostream>
 #include "Game.h"
 
+class Initialization 
+{
+
+};
+
 int main()
 {
 	Game& game = Game::Instance(); //безопасный способ получения ссылки на Singleton
