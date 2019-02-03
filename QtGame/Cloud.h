@@ -7,5 +7,6 @@ class Cloud :
 public:
 	Cloud();
 	~Cloud();
+    //static void SetDafaultParams(const QSettings & settings);
 };
 

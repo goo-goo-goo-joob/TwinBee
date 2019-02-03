@@ -12,10 +12,10 @@ class Game
 	Game& operator= (Game const&) = delete;
 	//Bee bee;
 	EnemyFactory *factory;
-	int _width, _height;
-	int _score;
-	bool _play;
-	Level _level;
+    int _width, _height;
+    int _score;
+    bool _play;
+    Level _level;
 public:
 	static Game& Instance()
 	{
@@ -23,6 +23,13 @@ public:
 		static Game g;
 		return g;
 	}
+    void SetDafaultParams(const QSettings & sett){
+        _level = Level(sett.value("setgame/level", 0).toInt());
+        _play = true;
+        _width = sett.value("setgame/wigth", 900).toInt();
+        _height = sett.value("setgame/height", 700).toInt();
+        _score = sett.value("setgame/score", 0).toInt();
+    }
 	void Draw();
 	void Move();
 	int width() const { return _width; }

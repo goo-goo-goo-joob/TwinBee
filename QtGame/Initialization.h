@@ -4,21 +4,29 @@
 #include <QSettings>
 #include <QString>
 #include "Game.h"
+#include "Cloud.h"
 
 class Initialization
 {
     QString _path;
+    Initialization(){
+
+    }
+    ~Initialization(){}
+
 public:
-    Initialization(QString p){
+    static Initialization& Instance()
+    {
+        static Initialization i;
+        return i;
+    }
+    void Init(QString p)
+    {
         _path = QCoreApplication:: applicationDirPath();
         _path.append(p);
         QSettings sett(_path, QSettings::IniFormat);
-        Game& game = Game::Instance(); //безопасный способ получения ссылки на Singleton
-        game.level(Level(sett.value("setgame/level", 0).toInt()));
-        game.play(true);
-        game.width(sett.value("setgame/wigth", 900).toInt());
-        game.height(sett.value("setgame/height", 700).toInt());
-        game.score(sett.value("setgame/score", 0).toInt());
+        //Cloud::SetDafaultParams(sett);
+        Game::Instance().SetDafaultParams(sett);
 
     }
     void Save(){
@@ -30,7 +38,11 @@ public:
         sett.setValue("setgame/height", game.height());
         sett.setValue("setgame/score", game.score());
     }
-    ~Initialization() {}
+    int setScoreRed(){
+        QSettings sett(_path, QSettings::IniFormat);
+        return sett.value("setscore/RedEnemy", 0).toInt();
+    }
+
 };
 
 #endif // INITIALIZATION_H

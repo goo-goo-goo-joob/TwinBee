@@ -19,7 +19,6 @@ SOURCES += \
         main.cpp \
     Bee.cpp \
     Cloud.cpp \
-    Enemy.cpp \
     Game.cpp \
     GameItem.cpp
 
