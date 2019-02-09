@@ -21,10 +21,10 @@ public:
         _x = 0;
         _y = 0;
     }
-    static void SetDafaultParams(const QSettings & sett){
+    /*static void SetDafaultParams(const QSettings & sett){
         _score = sett.value("setscore/RedEnemy", 0).toInt();
         _speed = sett.value("setspeed/RedEnemy", 0).toInt();
-    }
+    }*/
     void Draw() { cout << "RedEnemy appeared (" <<_x<<"," <<_y<<")"<< endl; }
     void Move() {
         _x += _speed;
@@ -50,10 +50,10 @@ public:
         _x -= _speed;
         _y += _speed;
     }
-    static void SetDafaultParams(const QSettings & sett){
+    /*static void SetDafaultParams(const QSettings & sett){
         _score = sett.value("setscore/BlueEnemy", 0).toInt();
         _speed = sett.value("setspeed/BlueEnemy", 0).toInt();
-    }
+    }*/
     ~BlueEnemy(){}
 };
 

@@ -2,11 +2,19 @@
 #include "GameItem.h"
 #include "Bee.h"
 #include "Enemy.h"
+#include "initialization.h"
 enum Level { FIRST = 1, SECOND = 2 };
 class Game
 {
-	Game();
-	~Game();
+    Game(){
+        Initialization& ini = Initialization::Instance();
+        _level = Level(ini.Sett("setgame/level", 1));
+        _play = true;
+        _width = ini.Sett("setgame/width", 900);
+        _height = ini.Sett("setgame/height", 700);
+        _score = ini.Sett("setgame/score");
+    }
+    ~Game(){}
 	// необходимо запретить копирование
 	Game(Game const&) = delete;
 	Game& operator= (Game const&) = delete;
@@ -23,13 +31,13 @@ public:
 		static Game g;
 		return g;
 	}
-    void SetDafaultParams(const QSettings & sett){
+    /*void SetDafaultParams(const QSettings & sett){
         _level = Level(sett.value("setgame/level", 0).toInt());
         _play = true;
         _width = sett.value("setgame/wigth", 900).toInt();
         _height = sett.value("setgame/height", 700).toInt();
         _score = sett.value("setgame/score", 0).toInt();
-    }
+    }*/
 	void Draw();
 	void Move();
 	int width() const { return _width; }

@@ -16,5 +16,9 @@ int main(int argc, char *argv[])
     ini.Init("settings.ini");
     Game& game = Game::Instance(); //безопасный способ получения ссылки на Singleton
     game.Draw();
+    cout << game.width() << game.height();
+    ini.Save("setgame", "level", 2);
+    ini.Save("setgame", "score", 100);
+    ini.Save("logs", "no logs", 1);
     return a.exec();
 }
