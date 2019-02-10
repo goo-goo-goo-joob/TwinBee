@@ -17,9 +17,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    Bee.cpp \
-    Cloud.cpp \
-    Game.cpp \
     GameItem.cpp
 
 # Default rules for deployment.
@@ -37,4 +34,5 @@ HEADERS += \
     Enemy.h \
     Game.h \
     GameItem.h \
-    Initialization.h
+    Initialization.h \
+    Flyingobj.h

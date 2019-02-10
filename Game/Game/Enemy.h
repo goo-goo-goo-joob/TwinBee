@@ -1,55 +1,107 @@
 #pragma once
 #include "GameItem.h"
+#include "initialization.h"
 
 //Abstract base product
 class Enemy :
 	public GameItem
 {
-	int _score;
 public:
-	Enemy();
-	void Move() {};
-	~Enemy();
+    Enemy() {
+        Initialization& ini = Initialization::Instance();
+        _x = ini.Sett("setcoord/enemy_x");
+        if (_x < 0){
+            _x = 0;
+        }
+        _y = ini.Sett("setcoord/enemy_y");
+        if (_y < 0){
+            _y = 0;
+        }
+    }
+    ~Enemy(){}
 };
 
 //Concrete product type Red
 class RedEnemy :
 	public Enemy
 {
-public:
-	void Draw() { cout << "RedEnemy appeared" << endl; }
+    int _score;
+    int _speed;
+public:    
+    RedEnemy(){
+        Initialization& ini = Initialization::Instance();
+        _score = ini.Sett("setscore/RedEnemy");
+        if (_score < 0){
+            _score = 0;
+        }
+        _speed = ini.Sett("setspeed/RedEnemy");
+        if (_speed < 0){
+            _speed = 0;
+        }
+    }
+    void Draw() { cout << "RedEnemy appeared (" <<_x<<"," <<_y<<")"<< endl; }
+    void Move() {
+        _x += _speed;
+        _y += _speed;
+    }
+
+    ~RedEnemy() {}
 };
 
 //Concrete product type Blue
 class BlueEnemy :
 	public Enemy
 {
+    int _score;
+    int _speed;
 public:
-	void Draw() { cout << "BlueEnemy appeared" << endl; }
+    BlueEnemy(){
+        Initialization& ini = Initialization::Instance();
+        _score = ini.Sett("setscore/BlueEnemy");
+        if (_score < 0){
+            _score = 0;
+        }
+        _speed = ini.Sett("setspeed/BlueEnemy");
+        if (_speed < 0){
+            _speed = 0;
+        }
+    }
+    void Draw() { cout << "BlueEnemy appeared (" <<_x<<"," <<_y<<")"<< endl; }
+    void Move() {
+        _x -= _speed;
+        _y += _speed;
+    }
+    ~BlueEnemy(){}
 };
 
 //Abstract factory
 class EnemyFactory {
 public:
-	virtual Enemy* CreateEnemy() = 0;
+    EnemyFactory(){}
+    virtual Enemy* CreateEnemy() = 0;
+    //virtual ~EnemyFactory() = 0;
 };
 
 //Conctete factory type Red
 class RedEnemyFactory :
 	public EnemyFactory {
 public:
-	Enemy* CreateEnemy() {
-		return new RedEnemy;
-	}
+    RedEnemyFactory() {}
+    Enemy* CreateEnemy() override{
+        return new RedEnemy;
+    }
+	~RedEnemyFactory() {}
 };
 
 //Conctete factory type Blue
 class BlueEnemyFactory :
 	public EnemyFactory {
 public:
-	Enemy* CreateEnemy() {
+    BlueEnemyFactory() {}
+    Enemy* CreateEnemy() override {
 		return new BlueEnemy;
 	}
+    ~BlueEnemyFactory() {}
 };
 
 //Working through abstract interface

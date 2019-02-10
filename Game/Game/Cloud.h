@@ -1,11 +1,19 @@
 #pragma once
 #include "GameItem.h"
+#include "initialization.h"
+
 class Cloud :
 	public GameItem
 {
-	int _score;
+    int _speed;
 public:
-	Cloud();
-	~Cloud();
+    Cloud(){
+        Initialization& ini = Initialization::Instance();
+        _speed = ini.Sett("setspeed/Cloud");
+        if (_speed < 0){
+            _speed = 0;
+        }
+    }
+    ~Cloud(){}
 };
 

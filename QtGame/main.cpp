@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     Initialization& ini = Initialization::Instance();
     ini.Init("settings.ini");
-    Game& game = Game::Instance(); //безопасный способ получения ссылки на Singleton
+    Game& game = Game::Instance();
     game.Draw();
     cout << game.width() << game.height();
     ini.Save("setgame", "level", 2);

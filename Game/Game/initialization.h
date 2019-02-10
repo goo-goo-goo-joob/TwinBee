@@ -1,10 +1,12 @@
-#pragma once
+#ifndef INITIALIZATION_H
+#define INITIALIZATION_H
 #include <QCoreApplication>
 #include <QSettings>
 #include <QString>
 #include <QTextStream>
 #include <QMap>
 #include <QFile>
+
 using namespace std;
 
 class Initialization
@@ -25,8 +27,7 @@ public:
         }
         return map.value(key).toInt();
     }
-    void Save(const QString &section,
-              const QString &variable, int value){
+    void Save(const QString &section, const QString &variable, int value){
         QSettings sett(_path, QSettings::IniFormat);
         QFile file(_path);
         if ((file.open(QIODevice::ReadWrite)))
@@ -37,38 +38,27 @@ public:
             QTextStream stream( &file );
             do {
                 line = file.readLine();
-                if (line.contains(section, Qt::CaseSensitive)
-                        && !line.isEmpty() && line[0] != ';')
-                {
+                if (line.contains(section, Qt::CaseSensitive) && !line.isEmpty() && line[0] != ';') {
                     stream << line;
                     line = file.readLine();
-                    while(!line.isEmpty() && line != "\n"){
-                        if (line.contains(variable,
-                                          Qt::CaseSensitive)
-                                && !line.isEmpty()
-                                && line[0] != ';')
-                        {
+                    while(!line.isEmpty() && line != "\n"){//между секциями должна быть пустая строка
+                        if (line.contains(variable, Qt::CaseSensitive) && !line.isEmpty() && line[0] != ';') {
                             flag = true;
-                            line = variable + "="
-                                    + QString::number(value)
-                                    + '\n';
+                            line = variable + "=" + QString::number(value) + '\n';
                         }
                         stream << line;
                         line = file.readLine();
                     }
                     if (!flag){
                         flag = true;
-                        line = variable + "="
-                                + QString::number(value)
-                                + "\n\n";
+                        line = variable + "=" + QString::number(value) + "\n\n";
                     }
                 }
                 stream << line;
             } while (!line.isEmpty());
             if (!flag){
                 stream << "\n\n[" + section + "]" + '\n';
-                stream << variable + "="
-                          + QString::number(value) + "\n";
+                stream << variable + "=" + QString::number(value) + "\n";
             }
             file.resize(0);
             file.close();
@@ -119,6 +109,8 @@ public:
         _path = QCoreApplication:: applicationDirPath();
         _path.append("/" + p);
         QSettings sett(_path, QSettings::IniFormat);
+        //Cloud::SetDafaultParams(sett);
+        //Game::Instance().SetDafaultParams(sett);
         QFile file(_path);
         if ((file.open(QIODevice::ReadOnly)))
         {
@@ -130,5 +122,8 @@ public:
             }
             file.close();
         }
+
     }
 };
+
+#endif // INITIALIZATION_H

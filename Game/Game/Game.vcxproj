@@ -154,8 +154,10 @@
     <ClInclude Include="Bee.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="flyingobj.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameItem.h" />
+    <ClInclude Include="initialization.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
