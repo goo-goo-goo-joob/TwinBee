@@ -14,5 +14,7 @@ public:
             _speed = 0;
         }
     }
-    ~Cloud(){}
+    void access(Visitor &v) override {
+        v.visit(*this);
+      }
 };

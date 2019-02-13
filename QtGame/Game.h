@@ -43,7 +43,8 @@ public:
     {
         factory = new RedEnemyFactory;
         Client *c = new Client(factory);
-        c->Draw();
+        DrawGameItems visitor;
+        c->access(visitor);
         delete factory;
         delete c;
     }

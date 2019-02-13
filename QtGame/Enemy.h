@@ -6,6 +6,9 @@
 class Enemy :
 	public GameItem
 {
+protected:
+    int _score;
+    int _speed;
 public:
     Enemy() {
         Initialization& ini = Initialization::Instance();
@@ -18,14 +21,11 @@ public:
             _y = 0;
         }
     }
-    ~Enemy(){}
 };
 //Concrete product type Red
 class RedEnemy :
 	public Enemy
 {
-    int _score;
-    int _speed;
 public:    
     RedEnemy(){
         Initialization& ini = Initialization::Instance();
@@ -38,6 +38,9 @@ public:
             _speed = 0;
         }
     }
+    void access(Visitor &v) override {
+        v.visit(*this);
+      }
     void Draw() { cout << "RedEnemy appeared "
                           "(" <<_x<<"," <<_y<<")"<< endl; }
     void Move() {
@@ -51,8 +54,6 @@ public:
 class BlueEnemy :
 	public Enemy
 {
-    int _score;
-    int _speed;
 public:
     BlueEnemy(){
         Initialization& ini = Initialization::Instance();
@@ -65,6 +66,9 @@ public:
             _speed = 0;
         }
     }
+    void access(Visitor &v) override {
+        v.visit(*this);
+      }
     void Draw() { cout << "BlueEnemy appeared "
                           "(" <<_x<<"," <<_y<<")"<< endl; }
     void Move() {
@@ -105,9 +109,9 @@ class Client {
 	EnemyFactory *_f;
 public:
 	Client(EnemyFactory *f): _f(f) {}
-	void Draw()
+    void access(Visitor &v)
 	{
 		Enemy *e = _f->CreateEnemy();
-		e->Draw();
+        e->access(v);
 	}
 };

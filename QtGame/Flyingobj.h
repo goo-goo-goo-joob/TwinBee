@@ -2,6 +2,7 @@
 #include "GameItem.h"
 #include "initialization.h"
 
+//class visitor
 class FlyingObj :
     public GameItem
 {
@@ -16,5 +17,7 @@ public:
         _x = x;
         _y = y;
     }
-    ~FlyingObj(){}
+    void access(Visitor &v) override {
+        v.visit(*this);
+    }
 };

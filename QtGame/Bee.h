@@ -17,5 +17,7 @@ public:
             _y = 0;
         }
     }
-    ~Bee(){}
+    void access(Visitor &v) override {
+        v.visit(*this);
+      }
 };
