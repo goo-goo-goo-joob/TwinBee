@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QKeyEvent>
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +20,8 @@ private:
     Ui::MainWindow *ui;
 public slots:
     void on_pushButton_clicked();
+    //void keyPressEvent(QKeyEvent*);
+    void keyReleaseEvent(QKeyEvent*);
 };
 
 #endif // MAINWINDOW_H

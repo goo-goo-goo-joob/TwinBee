@@ -26,9 +26,7 @@ class Game
         if (_score < 0){
             _score = 0;
         }
-        bee = new Bee();
-        GameItem* item = static_cast<GameItem*>(new RedEnemy());
-        items.push_back(item);
+        setLevel1();
     }
     ~Game(){}
 	Game(Game const&) = delete;
@@ -42,6 +40,15 @@ class Game
 public:
     Bee *bee;
     QVector<GameItem*> items;
+    QVector<Client*> enemes;
+    void setLevel1(){
+        bee = new Bee();
+        factory = new BlueEnemyFactory;
+        for (int i = 0; i < 3; i++) {
+            Client* enemy = static_cast<Client*>(new Client(factory));
+            enemes.push_back(enemy);
+        }
+    }
 	static Game& Instance()
     {
 		static Game g;
@@ -49,15 +56,12 @@ public:
     }
     void Draw(QMainWindow *e)
     {
-        factory = new RedEnemyFactory;
-        Client *c = new Client(factory);
-        DrawGameItems visitor(e);//i've initialised this class with QMainWindow
-                                 //it's to prevent function access (see below) with more args
-        c->access(visitor);
+        DrawGameItems visitor(e);
+        for(auto c: enemes){
+            c->access(visitor);
+        }
         bee->access(visitor); // i've changed the place of draw function
         //bee->Draw(e);
-        delete factory;
-        delete c;
     }
     void Move(){}
 	int width() const { return _width; }

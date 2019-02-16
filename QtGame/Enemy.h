@@ -20,10 +20,12 @@ public:
         if (_y < 0){
             _y = 0;
         }
+        _score = 0;
+        _speed = 0;
     }
-    void Draw(QMainWindow *e) override{
+//    void Draw(QMainWindow *e) override{
 
-    }
+//    }
 };
 //Concrete product type Red
 class RedEnemy :

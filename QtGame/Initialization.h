@@ -42,7 +42,7 @@ public:
                 {
                     stream << line;
                     line = file.readLine();
-                    while(!line.isEmpty() && line != "\n"){
+                    while(!line.isEmpty() && line != "\n" && line[0] != ';'){
                         if (line.contains(variable,
                                           Qt::CaseSensitive)
                                 && !line.isEmpty()

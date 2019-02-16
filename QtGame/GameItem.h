@@ -25,11 +25,14 @@ public:
 class GameItem
 {
 protected:
-    int _x, _y;
+    int _x, _y, _speed;
 	bool _play;
 public:
     GameItem(){
         _play = true;
+        _x = 0;
+        _y = 0;
+        _speed = 0;
     }
     virtual void access(Visitor &v) = 0;
     virtual ~GameItem() = 0;
@@ -38,7 +41,10 @@ public:
     bool isIn();
     int x(){ return _x;}
     int y(){ return _y;}
-    virtual void Draw(QMainWindow *e) = 0;
+    int speed() {return _speed;}
+    void x( int x ){ _x = x;}
+    void y( int y ){ _y = y;}
+    //virtual void Draw(QMainWindow *e) = 0;
 };
 
 //concrete visitor
@@ -51,12 +57,17 @@ public:
     void visit(Bee &b)override ;
     void visit(Cloud &c) override{}
     void visit(FlyingObj &f) override{}
-    void visit(RedEnemy &r) override{
-        cout << "RedEnemy appeared " << endl;
-    }
-    void visit(BlueEnemy &b) override{
-        cout << "BlueEnemy appeared " << endl;
-    }
+    void visit(RedEnemy &r) override;
+    void visit(BlueEnemy &b) override;
+};
 
-
+//concrete visitor
+class MoveGameItems:
+        public Visitor{
+public:
+    void visit(Bee &b)override;
+    void visit(Cloud &c) override{}
+    void visit(FlyingObj &f) override{}
+    void visit(RedEnemy &r) override{}
+    void visit(BlueEnemy &b) override{}
 };

@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "Game.h"
-class QPaintEvent;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,6 +26,29 @@ void MainWindow::paintEvent(QPaintEvent *event)
 void MainWindow::on_pushButton_clicked()
 {
     Game& game = Game::Instance();
-    game.bee->Move(5);
+    MoveGameItems visitor;
+    game.bee->access(visitor);
+    //game.bee->Move(5);
     update();
+}
+
+//void MainWindow::keyPressEvent( QKeyEvent * event )
+//{
+//    QMainWindow::keyPressEvent(event);
+//}
+
+void MainWindow::keyReleaseEvent(QKeyEvent * event)
+{
+    if( event->key() == Qt::Key_Left )
+    {
+        Game& game = Game::Instance();
+        game.bee->Move(-5);
+        update();
+    }
+    if( event->key() == Qt::Key_Right )
+    {
+        Game& game = Game::Instance();
+        game.bee->Move(5);
+        update();
+    }
 }
