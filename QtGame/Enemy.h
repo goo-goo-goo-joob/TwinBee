@@ -21,6 +21,9 @@ public:
             _y = 0;
         }
     }
+    void Draw(QMainWindow *e) override{
+
+    }
 };
 //Concrete product type Red
 class RedEnemy :

@@ -1,4 +1,11 @@
-QT -= gui
+
+
+TEMPLATE = app
+TARGET = name_of_the_app
+
+QT += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -17,7 +24,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    GameItem.cpp
+    GameItem.cpp \
+    mainwindow.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -35,4 +43,8 @@ HEADERS += \
     Game.h \
     GameItem.h \
     Initialization.h \
-    Flyingobj.h
+    Flyingobj.h \
+    mainwindow.h
+
+FORMS += \
+    mainwindow.ui

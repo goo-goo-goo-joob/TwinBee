@@ -11,3 +11,15 @@ bool GameItem::isIn(){
 GameItem::~GameItem()
 {
 }
+
+void DrawGameItems::visit(Bee &b){
+    QPainter painter(e);
+    QColor yellow("#f0d048");
+    Qt::BrushStyle style = Qt::SolidPattern;
+    QBrush brush(yellow, style);
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(b.x(),b.y(), 25,25);
+    cout << b.x() << endl;//but when Move from mainwindow goes it ramains constant :_(
+    painter.save();
+}

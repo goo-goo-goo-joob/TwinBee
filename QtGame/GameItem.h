@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <QPainter>
+#include <QMainWindow>
 
 class Bee;
 class Cloud;
@@ -23,7 +25,7 @@ public:
 class GameItem
 {
 protected:
-	int _x, _y;
+    int _x, _y;
 	bool _play;
 public:
     GameItem(){
@@ -31,16 +33,22 @@ public:
     }
     virtual void access(Visitor &v) = 0;
     virtual ~GameItem() = 0;
-	virtual void Draw() = 0;
-	virtual void Move() = 0;
+    //virtual void Draw() = 0;
+    //virtual void Move() = 0;
     bool isIn();
+    int x(){ return _x;}
+    int y(){ return _y;}
+    virtual void Draw(QMainWindow *e) = 0;
 };
 
 //concrete visitor
 class DrawGameItems:
         public Visitor{
+private:
+    QMainWindow *e;
 public:
-    void visit(Bee &b) override{}
+    DrawGameItems(QMainWindow *event): e(event){}
+    void visit(Bee &b)override ;
     void visit(Cloud &c) override{}
     void visit(FlyingObj &f) override{}
     void visit(RedEnemy &r) override{
@@ -49,4 +57,6 @@ public:
     void visit(BlueEnemy &b) override{
         cout << "BlueEnemy appeared " << endl;
     }
+
+
 };

@@ -3,6 +3,8 @@
 #include "Enemy.h"
 #include "Cloud.h"
 #include "initialization.h"
+
+
 class Game
 {
     Game(){
@@ -24,27 +26,36 @@ class Game
         if (_score < 0){
             _score = 0;
         }
+        bee = new Bee();
+        GameItem* item = static_cast<GameItem*>(new RedEnemy());
+        items.push_back(item);
     }
     ~Game(){}
 	Game(Game const&) = delete;
 	Game& operator= (Game const&) = delete;
-	EnemyFactory *factory;
+    EnemyFactory *factory;
     int _width, _height;
     int _score;
     bool _play;
     int _level;
+
 public:
+    Bee *bee;
+    QVector<GameItem*> items;
 	static Game& Instance()
     {
 		static Game g;
 		return g;
     }
-    void Draw()
+    void Draw(QMainWindow *e)
     {
         factory = new RedEnemyFactory;
         Client *c = new Client(factory);
-        DrawGameItems visitor;
+        DrawGameItems visitor(e);//i've initialised this class with QMainWindow
+                                 //it's to prevent function access (see below) with more args
         c->access(visitor);
+        bee->access(visitor); // i've changed the place of draw function
+        //bee->Draw(e);
         delete factory;
         delete c;
     }
