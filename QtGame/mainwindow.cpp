@@ -23,18 +23,12 @@ void MainWindow::paintEvent(QPaintEvent *event)
     game.Draw(this);
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    Game& game = Game::Instance();
-    MoveGameItems visitor;
-    game.bee->access(visitor);
-    //game.bee->Move(5);
-    update();
-}
-
-//void MainWindow::keyPressEvent( QKeyEvent * event )
+//void MainWindow::on_pushButton_clicked()
 //{
-//    QMainWindow::keyPressEvent(event);
+//    Game& game = Game::Instance();
+//    MoveGameItems visitor;
+//    game.bee->access(visitor);
+//    update();
 //}
 
 void MainWindow::keyReleaseEvent(QKeyEvent * event)

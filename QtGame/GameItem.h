@@ -36,7 +36,6 @@ public:
     }
     virtual void access(Visitor &v) = 0;
     virtual ~GameItem() = 0;
-    //virtual void Draw() = 0;
     //virtual void Move() = 0;
     bool isIn();
     int x(){ return _x;}
@@ -44,7 +43,6 @@ public:
     int speed() {return _speed;}
     void x( int x ){ _x = x;}
     void y( int y ){ _y = y;}
-    //virtual void Draw(QMainWindow *e) = 0;
 };
 
 //concrete visitor
@@ -55,8 +53,8 @@ private:
 public:
     DrawGameItems(QMainWindow *event): e(event){}
     void visit(Bee &b)override ;
-    void visit(Cloud &c) override{}
-    void visit(FlyingObj &f) override{}
+    void visit(Cloud &c) override;
+    void visit(FlyingObj &f) override;
     void visit(RedEnemy &r) override;
     void visit(BlueEnemy &b) override;
 };

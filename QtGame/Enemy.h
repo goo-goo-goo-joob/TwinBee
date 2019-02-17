@@ -12,20 +12,17 @@ protected:
 public:
     Enemy() {
         Initialization& ini = Initialization::Instance();
-        _x = ini.Sett("setcoord/enemy_x");
+        _x = ini.Sett("setcoord/enemy_x") +  + rand()%70;
         if (_x < 0){
             _x = 0;
         }
-        _y = ini.Sett("setcoord/enemy_y");
+        _y = ini.Sett("setcoord/enemy_y")  + rand()%70;
         if (_y < 0){
             _y = 0;
         }
         _score = 0;
         _speed = 0;
     }
-//    void Draw(QMainWindow *e) override{
-
-//    }
 };
 //Concrete product type Red
 class RedEnemy :
@@ -46,13 +43,10 @@ public:
     void access(Visitor &v) override {
         v.visit(*this);
       }
-    void Draw() { cout << "RedEnemy appeared "
-                          "(" <<_x<<"," <<_y<<")"<< endl; }
     void Move() {
         _x += _speed;
         _y += _speed;
     }
-
     ~RedEnemy() {}
 };
 //Concrete product type Blue
@@ -74,8 +68,6 @@ public:
     void access(Visitor &v) override {
         v.visit(*this);
       }
-    void Draw() { cout << "BlueEnemy appeared "
-                          "(" <<_x<<"," <<_y<<")"<< endl; }
     void Move() {
         _x -= _speed;
         _y += _speed;

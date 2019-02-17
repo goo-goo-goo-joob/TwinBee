@@ -2,6 +2,7 @@
 #include "Bee.h"
 #include "Enemy.h"
 #include "Cloud.h"
+#include "flyingobj.h"
 #include "initialization.h"
 
 
@@ -28,26 +29,37 @@ class Game
         }
         setLevel1();
     }
-    ~Game(){}
+    ~Game(){
+        delete bee;
+        delete factory;
+        for(auto c: items){
+            delete c;
+        }
+    }
 	Game(Game const&) = delete;
-	Game& operator= (Game const&) = delete;
+    Game& operator= (Game const&) = delete;
     EnemyFactory *factory;
     int _width, _height;
     int _score;
     bool _play;
     int _level;
-
 public:
     Bee *bee;
     QVector<GameItem*> items;
     QVector<Client*> enemes;
     void setLevel1(){
         bee = new Bee();
-        factory = new BlueEnemyFactory;
+        factory = new RedEnemyFactory;
         for (int i = 0; i < 3; i++) {
             Client* enemy = static_cast<Client*>(new Client(factory));
             enemes.push_back(enemy);
         }
+        for (int i = 0; i < 3; i++) {
+            GameItem* item = static_cast<GameItem*>(new Cloud);
+            items.push_back(item);
+        }
+        GameItem* item = static_cast<GameItem*>(new FlyingObj(bee->x(), bee->y() - 50));
+        items.push_back(item);
     }
 	static Game& Instance()
     {
@@ -58,6 +70,9 @@ public:
     {
         DrawGameItems visitor(e);
         for(auto c: enemes){
+            c->access(visitor);
+        }
+        for(auto c: items){
             c->access(visitor);
         }
         bee->access(visitor); // i've changed the place of draw function

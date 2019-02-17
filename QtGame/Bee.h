@@ -22,19 +22,8 @@ public:
         }
     }
     void access(Visitor &v) override {
-        v.visit(*this);//it calls the function from GameItem
+        v.visit(*this);
       }
-    ~Bee(){}
-//    void Draw(QMainWindow *e) override {
-//        QPainter painter(e);
-//        QColor yellow("#f0d048");
-//        Qt::BrushStyle style = Qt::SolidPattern;
-//        QBrush brush(yellow, style);
-//        painter.setBrush(brush);
-//        painter.setPen(Qt::NoPen);
-//        painter.drawEllipse(_x,_y, 20,20);
-//        painter.save();
-//    }
     void Move(int x){
         _x += x;
     }

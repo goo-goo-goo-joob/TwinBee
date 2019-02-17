@@ -1,7 +1,5 @@
 #pragma once
 #include "Game.h"
-#include "GameItem.h"
-
 
 bool GameItem::isIn(){
     Game& game = Game::Instance();
@@ -9,9 +7,7 @@ bool GameItem::isIn(){
             && 0 <_y && _y <game.height() );
 }
 
-GameItem::~GameItem()
-{
-}
+GameItem::~GameItem(){}
 
 void DrawGameItems::visit(Bee &b){
     QPainter painter(e);
@@ -21,7 +17,29 @@ void DrawGameItems::visit(Bee &b){
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(b.x(),b.y(), 25,25);
-    cout << b.x() << endl;//but when Move from mainwindow goes it ramains constant :_(
+    cout << b.x() << endl;
+    painter.save();
+}
+
+void DrawGameItems::visit(Cloud &c){
+    QPainter painter(e);
+    QColor gray("#87CEFA");
+    Qt::BrushStyle style = Qt::SolidPattern;
+    QBrush brush(gray, style);
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(c.x(),c.y(), 50,30);
+    painter.save();
+}
+
+void DrawGameItems::visit(FlyingObj &f){
+    QPainter painter(e);
+    QColor gray("#A52A2A");
+    Qt::BrushStyle style = Qt::SolidPattern;
+    QBrush brush(gray, style);
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(f.x(),f.y(), 10,10);
     painter.save();
 }
 
@@ -36,7 +54,7 @@ void DrawGameItems::visit(RedEnemy &r){
     QBrush brush(red, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawEllipse(r.x(),r.y() + rand()%20, 25,25);
+    painter.drawRect(r.x(),r.y(), 25,25);
     painter.save();
 }
 
@@ -47,6 +65,6 @@ void DrawGameItems::visit(BlueEnemy &b){
     QBrush brush(blue, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawEllipse(b.x(),b.y() + rand()%20, 50,25);
+    painter.drawRect(b.x(),b.y(), 25,25);
     painter.save();
 }
