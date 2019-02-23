@@ -20,6 +20,10 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
+        //_notifer->Subscribe(this);
+    }
+    ~Bee(){
+        //_notifer->Unsubscribe(this);
     }
     void access(Visitor &v) override {
         v.visit(*this);
@@ -27,4 +31,9 @@ public:
     void Move(int x){
         _x += x;
     }
+    bool Update(Notifer* n) override{}
+    //bool Update(Notifer* n) override{
+    //    if(n == _notifer)
+    //        Move();
+    //}
 };

@@ -8,6 +8,7 @@ class Cloud;
 class FlyingObj;
 class RedEnemy;
 class BlueEnemy;
+class Notifer;
 
 using namespace std;
 
@@ -35,6 +36,7 @@ public:
         _speed = 0;
     }
     virtual void access(Visitor &v) = 0;
+    virtual bool Update(Notifer* s) = 0;
     virtual ~GameItem() = 0;
     //virtual void Move() = 0;
     bool isIn();

@@ -20,4 +20,5 @@ public:
     void access(Visitor &v) override {
         v.visit(*this);
     }
+    bool Update(Notifer* n) override{}
 };

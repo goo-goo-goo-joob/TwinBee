@@ -25,7 +25,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
     GameItem.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    cloud.cpp \
+    observer.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -44,7 +46,8 @@ HEADERS += \
     GameItem.h \
     Initialization.h \
     Flyingobj.h \
-    mainwindow.h
+    mainwindow.h \
+    observer.h
 
 FORMS += \
     mainwindow.ui
