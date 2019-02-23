@@ -6,27 +6,28 @@
 class Enemy :
 	public GameItem
 {
+protected:
+    int _score;
+    int _speed;
 public:
     Enemy() {
         Initialization& ini = Initialization::Instance();
-        _x = ini.Sett("setcoord/enemy_x");
+        _x = ini.Sett("setcoord/enemy_x") +  + rand()%70;
         if (_x < 0){
             _x = 0;
         }
-        _y = ini.Sett("setcoord/enemy_y");
+        _y = ini.Sett("setcoord/enemy_y")  + rand()%70;
         if (_y < 0){
             _y = 0;
         }
+        _score = 0;
+        _speed = 0;
     }
-    ~Enemy(){}
 };
-
 //Concrete product type Red
 class RedEnemy :
 	public Enemy
 {
-    int _score;
-    int _speed;
 public:    
     RedEnemy(){
         Initialization& ini = Initialization::Instance();
@@ -39,21 +40,19 @@ public:
             _speed = 0;
         }
     }
-    void Draw() { cout << "RedEnemy appeared (" <<_x<<"," <<_y<<")"<< endl; }
+    void access(Visitor &v) override {
+        v.visit(*this);
+      }
     void Move() {
         _x += _speed;
         _y += _speed;
     }
-
     ~RedEnemy() {}
 };
-
 //Concrete product type Blue
 class BlueEnemy :
 	public Enemy
 {
-    int _score;
-    int _speed;
 public:
     BlueEnemy(){
         Initialization& ini = Initialization::Instance();
@@ -66,14 +65,15 @@ public:
             _speed = 0;
         }
     }
-    void Draw() { cout << "BlueEnemy appeared (" <<_x<<"," <<_y<<")"<< endl; }
+    void access(Visitor &v) override {
+        v.visit(*this);
+      }
     void Move() {
         _x -= _speed;
         _y += _speed;
     }
     ~BlueEnemy(){}
 };
-
 //Abstract factory
 class EnemyFactory {
 public:
@@ -81,7 +81,6 @@ public:
     virtual Enemy* CreateEnemy() = 0;
     //virtual ~EnemyFactory() = 0;
 };
-
 //Conctete factory type Red
 class RedEnemyFactory :
 	public EnemyFactory {
@@ -90,9 +89,8 @@ public:
     Enemy* CreateEnemy() override{
         return new RedEnemy;
     }
-	~RedEnemyFactory() {}
+    ~RedEnemyFactory() {}
 };
-
 //Conctete factory type Blue
 class BlueEnemyFactory :
 	public EnemyFactory {
@@ -103,15 +101,16 @@ public:
 	}
     ~BlueEnemyFactory() {}
 };
-
 //Working through abstract interface
 class Client {
 	EnemyFactory *_f;
+    Enemy *e;
 public:
-	Client(EnemyFactory *f): _f(f) {}
-	void Draw()
+    Client(EnemyFactory *f): _f(f) {
+        e = _f->CreateEnemy();
+    }
+    void access(Visitor &v)
 	{
-		Enemy *e = _f->CreateEnemy();
-		e->Draw();
+        e->access(v);
 	}
 };

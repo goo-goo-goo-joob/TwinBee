@@ -31,14 +31,15 @@ class Game
     }
     ~Game(){
         delete bee;
-        delete factory;
         for(auto c: items){
+            delete c;
+        }
+        for(auto c: enemes){
             delete c;
         }
     }
 	Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
-    EnemyFactory *factory;
     int _width, _height;
     int _score;
     bool _play;
@@ -49,7 +50,7 @@ public:
     QVector<Client*> enemes;
     void setLevel1(){
         bee = new Bee();
-        factory = new RedEnemyFactory;
+        EnemyFactory *factory = new BlueEnemyFactory;
         for (int i = 0; i < 3; i++) {
             Client* enemy = static_cast<Client*>(new Client(factory));
             enemes.push_back(enemy);
@@ -60,6 +61,7 @@ public:
         }
         GameItem* item = static_cast<GameItem*>(new FlyingObj(bee->x(), bee->y() - 50));
         items.push_back(item);
+        delete factory;
     }
 	static Game& Instance()
     {
@@ -75,8 +77,7 @@ public:
         for(auto c: items){
             c->access(visitor);
         }
-        bee->access(visitor); // i've changed the place of draw function
-        //bee->Draw(e);
+        bee->access(visitor);
     }
     void Move(){}
 	int width() const { return _width; }

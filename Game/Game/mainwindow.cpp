@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     Game& game = Game::Instance();
     this->setFixedSize(game.width(),game.height());
+
 }
 
 MainWindow::~MainWindow()
@@ -22,13 +23,19 @@ void MainWindow::paintEvent(QPaintEvent *event)
     game.Draw(this);
 }
 
+//void MainWindow::on_pushButton_clicked()
+//{
+//    Game& game = Game::Instance();
+//    MoveGameItems visitor;
+//    game.bee->access(visitor);
+//    update();
+//}
+
 void MainWindow::keyReleaseEvent(QKeyEvent * event)
 {
     if( event->key() == Qt::Key_Left )
     {
         Game& game = Game::Instance();
-        //MoveGameItems visitor;
-        //game.bee->access(visitor);
         game.bee->Move(-5);
         update();
     }

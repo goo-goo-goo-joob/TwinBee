@@ -1,4 +1,6 @@
-#pragma once
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include <QMainWindow>
 #include <QKeyEvent>
 
@@ -17,5 +19,8 @@ public:
 private:
     Ui::MainWindow *ui;
 public slots:
+    //void on_pushButton_clicked();
     void keyReleaseEvent(QKeyEvent*);
 };
+
+#endif // MAINWINDOW_H

@@ -158,6 +158,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameItem.h" />
     <ClInclude Include="initialization.h" />
+    <ClInclude Include="mainwindow.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

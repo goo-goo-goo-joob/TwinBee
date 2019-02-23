@@ -1,0 +1,132 @@
+%!TEX TS-program = xelatex
+
+% Шаблон документа LaTeX создан в 2018 году
+% Алексеем Подчезерцевым
+% В качестве исходных использованы шаблоны
+% 	Данилом Фёдоровых (danil@fedorovykh.ru) 
+%		https://www.writelatex.com/coursera/latex/5.2.2
+%	LaTeX-шаблон для русской кандидатской диссертации и её автореферата.
+%		https://github.com/AndreyAkinshin/Russian-Phd-LaTeX-Dissertation-Template
+
+\documentclass[a4paper,14pt]{article}
+
+\input{data/preambular.tex}
+\begin{document} % конец преамбулы, начало документа
+\input{data/title.tex}
+\setcounter{page}{2} % нумерация
+
+\renewcommand\contentsname{\centering {\normalsize Содержание}}
+\tableofcontents
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+
+Разработать и реализовать набор классов с использованием библиотеки \textit{Qt 4.8}, позволяющей выполнить отрисовку объектов из лабораторной работы 1 согласно варианту 6 (\textit{TwinBee}). Для отрисовки использовать средства класса \textit{QPainter}, объекты представить в виде разноцветных плоских фигур. Применить паттерн посетитель.
+
+
+\newpage
+
+\section{Основная часть}
+\subsection{Общая идея решения задачи}
+Проект был разработан с главным окном \textit{MainWindow} на основе базового класса \textit{QMainWindow}. Для отрискови объектов был использован класс \textit{QPainer}, методы \\ \textit{drawRect} и \textit{drawEllipse}, то есть все объекты были представлены в виде разноцветных овалов или прямоугольников. Был применен паттерн посетитель: поведение (функции \textit{Draw} и \textit{Move} классов  \textit{Bee}, \textit{Cloud}, \textit{FlyingObj}, \textit{RedEnemy} и \textit{BlueEnemy}), было реализовано в отдельном классе \textit{Visitor}.
+\subsection{Структура и принципы действия}
+Класс \textit{MainWindow}, который является наследником базового класса \textit{QMainWindow}, содержит макрос \textit{Q\_OBJECT}. Для проверки корректной работы программы был реализован слот \textit{keyReleaseEvent}, который при нажатии на кнопки \textit{лево} и \textit{право} перемещает объект пчелы по экрану. В классе \textit{MainWindow} переопределена функция базового класса \textit{paintEvent}, которая вызывает функцию \textit{Draw} в классе \textit{Game}.
+
+Для удобства реализации функции передвижения и добавления в классы новых однотипных методов был применен паттерн посетитель. Класс \textit{Visitor} содержит методы \textit{visit} для каждого класса, отличающиеся типом входного параметра, чтобы запустить метод для конкретного класса. Класс \textit{DrawGameItems} является посетителем, реализующим конкретное поведение классов при передвижении. В реализованном ранее родительском классе \textit{GameItem} описывается чисто виртуальный метод доступа посетителя \textit{access} с типом входного параметра \textit{Visitor}. В каждом конкретном классе (\textit{Bee}, \textit{Cloud}, \textit{FlyingObj}, \textit{RedEnemy} и \textit{BlueEnemy}) переопределяются методы доступа посетителя \textit{access}: вызывается функция \textit{visit} для данного класса. Также для проверки корректной работы паттерна был добавлен еще один класс конкретного посетителя \textit{MoveGameItems}, который должен будет описывать перемещение объектов.
+
+В классе \textit{DrawGameItems} содержится закрытое поле \textit{QMainWindow}, которое определяет событие изменения формы, и в котором переопределены функции \textit{visit} для всех классов. Общий принцип работы функций одинаковый для всех классов. В функции создается экземпляр класса \textit{QPainter}, который будет рисовать в \textit{MainWindow}, настраиваются цвет и стиль кисти, рисуется геометрическая фигура с помощью функций \textit{drawEllipse} и \textit{drawRect}, и сохраняется событие.
+
+Функция \textit{Draw} в классе \textit{Game} создает экземпляр класса \textit{DrawGameItems} и для каждого объекта игры вызывает функцию \textit{access} с созданным ранее посетителем.
+
+Функция \textit{setLevel} производит создание экземпляра класса \textit{Bee}, заполнение вектора врагов \textit{enemes} экземплярами классов \textit{RedEnemy} или \textit{BlueEnemy} (в зависимости от созданной конкретной фабрики \textit{EnemyFactory}), заполнение вектора \textit{items} экземплярами классов \textit{Cloud} и \textit{FlyingObj}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{ClassDiagram.png}
+	\caption{Диграма классов}	
+\end{figure}
+
+\subsection{Процедура получения исполняемых программных модулей}
+Программный код был скомпилирован с среде \textit{Qt Creator}. Компиляция раздельная: исходный код программы разделён на несколько файлов. Никаких дополнительных ключей не добавлялось, использовались ключи, которые добавляются по умолчанию. Параметры сборки: компилятор С++ MinGW 4.8.2, профиль Qt: Qt 4.8.7, отладчик GDB.
+\subsection{Результаты тестирования}
+Тестирование программы представлено в файле \textit{"main.cpp"} в функции \textit{Main()}. Ожидаемая отрисовка объектов в окне \textit{MainWindow}:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{MainWindow.jpg}
+	\caption{Результат тестирования}	
+\end{figure}
+
+\newpage
+\setcounter{figure}{1} 
+\setcounter{section}{1} 
+\setcounter{subsection}{1} 
+
+\begin{center}
+	\section*{Приложение А}
+	полный код программы
+	\addcontentsline{toc}{section}{Приложение А}
+\end{center}
+
+\renewcommand{\subsection}{\Asbuk{section}.\arabic{subsection}}
+\setcounter{subsection}{1} 
+\textbf{\subsection{  - Game.h}}
+\addcontentsline{toc}{subsection}{Game.h}
+\lstinputlisting[language=C++]{../QtGame/Game.h}
+
+\setcounter{subsection}{2} 
+\textbf{\subsection{  - GameItem.h}}
+\addcontentsline{toc}{subsection}{GameItem.h}
+\lstinputlisting[language=C++]{../QtGame/GameItem.h}
+
+\setcounter{subsection}{3} 
+\textbf{\subsection{  - Bee.h}}
+\addcontentsline{toc}{subsection}{Bee.h}
+\lstinputlisting[language=C++]{../QtGame/Bee.h}
+
+\setcounter{subsection}{4} 
+\textbf{\subsection{  - Cloud.h}}
+\addcontentsline{toc}{subsection}{Cloud.h}
+\lstinputlisting[language=C++]{../QtGame/Cloud.h}
+
+\setcounter{subsection}{5} 
+\textbf{\subsection{  - FlyingObj.h}}
+\addcontentsline{toc}{subsection}{FlyingObj.h}
+\lstinputlisting[language=C++]{../QtGame/FlyingObj.h}
+
+\setcounter{subsection}{6} 
+\textbf{\subsection{  - Enemy.h}}
+\addcontentsline{toc}{subsection}{Enemy.h}
+\lstinputlisting[language=C++]{../QtGame/Enemy.h}
+
+\setcounter{subsection}{7} 
+\textbf{\subsection{  - Initialization.h}}
+\addcontentsline{toc}{subsection}{Initialization.h}
+\lstinputlisting[language=C++]{../QtGame/Initialization.h}
+
+\setcounter{subsection}{8} 
+\textbf{\subsection{  - MainWindow.h}}
+\addcontentsline{toc}{subsection}{MainWindow.h}
+\lstinputlisting[language=C++]{../QtGame/mainwindow.h}
+
+\setcounter{subsection}{9} 
+\textbf{\subsection{  - GameItem.cpp}}
+\addcontentsline{toc}{subsection}{GameItem.cpp}
+\lstinputlisting[language=C++]{../QtGame/GameItem.cpp}
+
+\setcounter{subsection}{10} 
+\textbf{\subsection{  - main.cpp}}
+\addcontentsline{toc}{subsection}{main.cpp}
+\lstinputlisting[language=C++]{../QtGame/main.cpp}
+
+\setcounter{subsection}{11} 
+\textbf{\subsection{  - MainWindow.cpp}}
+\addcontentsline{toc}{subsection}{MainWindow.cpp}
+\lstinputlisting[language=C++]{../QtGame/mainwindow.cpp}
+
+\setcounter{subsection}{12} 
+\textbf{\subsection{  - Settings.ini}}
+\addcontentsline{toc}{subsection}{Settings.ini}
+\lstinputlisting{data/settings.ini}
+\end{document} % конец документа

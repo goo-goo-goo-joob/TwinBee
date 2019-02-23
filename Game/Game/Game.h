@@ -2,7 +2,10 @@
 #include "Bee.h"
 #include "Enemy.h"
 #include "Cloud.h"
+#include "flyingobj.h"
 #include "initialization.h"
+
+
 class Game
 {
     Game(){
@@ -24,31 +27,55 @@ class Game
         if (_score < 0){
             _score = 0;
         }
+        setLevel1();
     }
-    ~Game(){}
-	// необходимо запретить копирование
+    ~Game(){
+        delete bee;
+        for(auto c: items){
+            delete c;
+        }
+    }
 	Game(Game const&) = delete;
-	Game& operator= (Game const&) = delete;
-	EnemyFactory *factory;
+    Game& operator= (Game const&) = delete;
+
     int _width, _height;
     int _score;
     bool _play;
     int _level;
 public:
+    Bee *bee;
+    QVector<GameItem*> items;
+    QVector<Client*> enemes;
+    void setLevel1(){
+        bee = new Bee();
+        EnemyFactory *factory = new BlueEnemyFactory;
+        for (int i = 0; i < 3; i++) {
+            Client* enemy = static_cast<Client*>(new Client(factory));
+            enemes.push_back(enemy);
+        }
+        for (int i = 0; i < 3; i++) {
+            GameItem* item = static_cast<GameItem*>(new Cloud);
+            items.push_back(item);
+        }
+        GameItem* item = static_cast<GameItem*>(new FlyingObj(bee->x(), bee->y() - 50));
+        items.push_back(item);
+        delete factory;
+    }
 	static Game& Instance()
-	{
-		//безопасно, согласно стандарту —++11
+    {
 		static Game g;
 		return g;
     }
-    void Draw()
+    void Draw(QMainWindow *e)
     {
-        factory = new RedEnemyFactory;
-        //factory = new BlueEnemyFactory;
-        Client *c = new Client(factory);
-        c->Draw();
-        delete factory;
-        delete c;
+        DrawGameItems visitor(e);
+        for(auto c: enemes){
+            c->access(visitor);
+        }
+        for(auto c: items){
+            c->access(visitor);
+        }
+        bee->access(visitor);
     }
     void Move(){}
 	int width() const { return _width; }
@@ -62,4 +89,3 @@ public:
     void play(bool play) { _play = play; }
     void level(int level) { _level = level; }
 };
-

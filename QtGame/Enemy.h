@@ -104,11 +104,13 @@ public:
 //Working through abstract interface
 class Client {
 	EnemyFactory *_f;
+    Enemy *e;
 public:
-	Client(EnemyFactory *f): _f(f) {}
+    Client(EnemyFactory *f): _f(f) {
+        e = _f->CreateEnemy();
+    }
     void access(Visitor &v)
 	{
-		Enemy *e = _f->CreateEnemy();
         e->access(v);
 	}
 };
