@@ -14,12 +14,12 @@ Notifer::~Notifer() {
     delete timer;
 }
 
-void Notifer::Subscribe(GameItem *item)
+void Notifer::Subscribe(Observer *item)
 {
     _items.push_back(item);
 }
 
-void Notifer::Unsubscribe(GameItem *item)
+void Notifer::Unsubscribe(Observer *item)
 {
     auto it = find(_items.begin(), _items.end(), item);
     if ( it != _items.end() ){
@@ -30,5 +30,5 @@ void Notifer::Unsubscribe(GameItem *item)
 void Notifer::Notify(){
     stage++;
     for(auto item: _items)
-        item->Update(this);
+        item->Update(*this);
 }

@@ -59,9 +59,16 @@ public:
             GameItem* item = static_cast<GameItem*>(new Cloud);
             items.push_back(item);
         }
-        GameItem* item = static_cast<GameItem*>(new FlyingObj(bee->x(), bee->y() - 50));
-        items.push_back(item);
         delete factory;
+    }
+    void Clear(){
+        //for(auto c: enemes){
+        //    if (c->isIn())
+        //}
+        for(auto c: items){
+            if (!c->isIn())
+                delete c;
+        }
     }
 	static Game& Instance()
     {
@@ -78,6 +85,17 @@ public:
             c->access(visitor);
         }
         bee->access(visitor);
+        //for(auto c: items){
+        //    if (!c->isIn())
+        //        delete c;
+        //}
+        for (auto it = items.begin(); it != items.end(); it++) {
+            if (!(*it)->isIn()){
+                delete *it;
+                items.erase(it);
+                it--;
+            }
+        }
     }
     void Move(){}
 	int width() const { return _width; }

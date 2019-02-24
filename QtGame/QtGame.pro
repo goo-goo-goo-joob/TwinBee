@@ -27,7 +27,9 @@ SOURCES += \
     GameItem.cpp \
     mainwindow.cpp \
     cloud.cpp \
-    observer.cpp
+    observer.cpp \
+    bee.cpp \
+    flyingobj.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

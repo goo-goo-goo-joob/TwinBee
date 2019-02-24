@@ -30,11 +30,12 @@ void Cloud::access(Visitor &v) {
     v.visit(*this);
 }
 void Cloud::Move(){
-    _y+=10;
+    _y+=_speed;
 }
-bool Cloud::Update(Notifer *n){
-    if(n->getStage() % 30 == 0){
+void Cloud::Update(const Notifer& n){
+    if(n.getStage() % 30 == 0){
         cout << "HERHOVOE OBLAKO!!!" << endl;
+
     }
     Move();
 }

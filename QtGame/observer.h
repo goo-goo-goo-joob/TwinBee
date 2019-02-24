@@ -9,8 +9,14 @@
 #include <QTimer>
 using namespace std ;
 
+class Notifer;
+
 //GameItem is class Observer
-class GameItem;
+class Observer
+{
+public:
+    virtual void Update(const Notifer&) = 0;
+};
 
 //observable object
 class Notifer: public QObject
@@ -22,8 +28,8 @@ public:
         static Notifer n;
         return n;
     }
-    void Subscribe(GameItem* item);
-    void Unsubscribe(GameItem* item);
+    void Subscribe(Observer* item);
+    void Unsubscribe(Observer* item);
 
     int getStage() const
     {
@@ -36,7 +42,7 @@ public:
 public slots:
     void Notify();
 protected:
-    vector<GameItem*> _items;
+    vector<Observer*> _items;
 private:
     Notifer();
     ~Notifer();

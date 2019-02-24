@@ -10,7 +10,7 @@ public:
     Cloud();
     ~Cloud();
     void access(Visitor &v) override;
-    bool Update(Notifer* n) override;
+    void Update(const Notifer& n) override;
     void Move();
 };
 
