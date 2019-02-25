@@ -1,0 +1,161 @@
+%!TEX TS-program = xelatex
+
+% Шаблон документа LaTeX создан в 2018 году
+% Алексеем Подчезерцевым
+% В качестве исходных использованы шаблоны
+% 	Данилом Фёдоровых (danil@fedorovykh.ru) 
+%		https://www.writelatex.com/coursera/latex/5.2.2
+%	LaTeX-шаблон для русской кандидатской диссертации и её автореферата.
+%		https://github.com/AndreyAkinshin/Russian-Phd-LaTeX-Dissertation-Template
+
+\documentclass[a4paper,14pt]{article}
+
+\input{data/preambular.tex}
+\begin{document} % конец преамбулы, начало документа
+\input{data/title.tex}
+\setcounter{page}{2} % нумерация
+
+\renewcommand\contentsname{\centering {\normalsize Содержание}}
+\tableofcontents
+\newpage
+
+\section*{Постановка задачи}
+\addcontentsline{toc}{section}{Постановка задачи}
+
+Разработать набор классов, позволяющих реализовать игру \textit{Twin Bee}, согласно варианту 6. Априори известно, что пространство игры двумерное. Необходимо реализовать класс, позволяющий записывать и считывать информацию из файла формата INI. Необходимо реализовать минимальную логику игры, позволяющую выполнить проверку данных считанных из INI файла и
+выполнить начальную конфигурацию объектов. Разработать минимум два уровня для игры.
+Задействовать минимум два паттерна проектирования.
+
+\newpage
+
+\section{Основная часть}
+\subsection{Общая идея решения задачи}
+Для решения задачи были созданы классы:
+\begin{enumerate}
+	\item \textit{Game} - класс игры, управляющий всеми объектами игры
+	\item \textit{Initialization} - класс инициализации, выполняющий начальную конфигурацию объектов
+	\item Класс \textit{GameItem} - класс, являющийся базовым для всех персонажей игры
+	\item Классы \textit{Enemy}, \textit{Bee}, \textit{Cloud} и \textit{FlyingObj}, которые являются производными от класса GameItem
+\end{enumerate}
+К классам \textit{Game} и \textit{Initialization} применен паттерн проектирования \textit{Singleton}, который гарантирует наличие единственного экземпляра класса. Реализован паттерн \textit{Abstract Factory}, который позволит работать с разными видами \textit{Enemy}, не завися от конкретно типа \textit{Enemy}.
+\subsection{Структура и принципы действия}
+Класс \textit{Game} - класс одиночка, который позволяет использовать единственный экземпляр игры, доступный всем частям программы. Для его реализации использован приватный конструктор умолчания, приватный деструктор, конструкторы копирования и присваивания также приватные, что делает их недоступными. С помощью статического метода \textit{Instance} можно получить единственный экземпляр этого класса. Класс включает в себя поля \textit{height}, \textit{width}, \textit{score}, \textit{play}, \textit{level}, асессоры и геттеры для этих полей. Класс содержит в себе класс абстрактной фабрики \textit{Abstract Factory}, он используется в методе \textit{Draw} для отображения врагов разного типа. Метод \textit{Move} будет отвечать за передвижение всех элементов игры.
+
+Чисто виртуальный класс \textit{GameItem} содежит общие для всех элементов игры поля: \textit{x, y} (координаты объекта), \textit{play} (определяет существование объекта). В классе есть конструктор умолчания, чисто виртуальный деструктор и чисто виртуальные функции \textit{Move}, \textit{Draw}. Функция \textit{isIn} проверят, находится ли элемент внутри области игры.
+
+Класс-потомок \textit{Bee} - описывает главного персонажа игры, содержит конструктор умолчания, в котором инициализируется стартовыми координатами, и деструктор.
+
+Класс-наследник \textit{Cloud} - представляет реализацию облака, летающего по полю. Класс содержит поле speed, конструктор умолчания, в котором инциализируется speed, деструктор.
+
+Производный класс \textit{FlyingObj} отображает шарик, которым будет стрелять пчела, и колокольчик, выпадающий из облака. Класс включает в себя поле \textit{speed}, которое иницизируется в конструкторе с параметрами. Этот конструктор принимает координаты объекта, из которого он вылетает, и инициализирует ими свои координаты.
+
+Подкласс \textit{Enemy} - описывает общий тип врагов, содержит конструктор умолчания, в котором инициализируется стартовыми координатами, и деструктор. От этого класса наследуются \textit{RedEnemy} и \textit{BlueEnemy} - разные виды врагов. Они содержат поля \textit{score} и \textit{speed}, методы \textit{Move} (изменяет координаты врага) и \textit{Draw} (выводит в консоль координаты появления врага).
+
+Паттерн Абстрактная фабрика позволяет объявить интерфейсы конкретных продуктов (\textit{RedEnemy} и \textit{BlueEnemy}), относящихся к абстрактному продукту \textit{Enemy}. Класс \textit{EnemyFactory} объявляет чисто виртуальный метод создания абстрактного продукта \textit{Enemy} \textit{CreateEnemy}. Конкретные фабрики \textit{RedEnemyFactory} и \textit{BlueEnemyFactory} реализуют метод абстрактной фабрики \textit{EnemyFactory} \textit{CreateEnemy}, который создает экземпляр класса \textit{RedEnemy} или \textit{BlueEnemy} и возвращает ссылку на класс \textit{Enemy}. Класс \textit{Client} позволяет обращаться к произвольным конкретным продуктам через абстрактные классы. Этот класс содержит метод \textit{Draw}, который вызывает метод \textit{Draw} для конкретного врага .
+
+Классы \textit{Game}, \textit{Enemy}, \textit{Bee}, \textit{Cloud} и \textit{FlyingObj} инициализируются с помощь класса \textit{Initialization}, выполняющего начальную конфигурацию объектов. При каждой инициализации внутри класса производится проверка считанных данных. Это класс-одиночка, для реализации которого использован приватный конструктор умолчания, приватный деструктор, конструкторы копирования и присваивания также приватные, что делает их недоступными. С помощью статического метода \textit{Instance} можно получить единственный экземпляр этого класса. Класс включает в себя поле \textit{path}, которое хранит путь до файла с настройками, словарь \textit{map}, который хранит в себе значения переменных из определенной в секции \textit{ini} файла. В классе есть метод \textit{Sett}, с помощью которого можно получить значение нужной переменной, метод \textit{Save}, позволяющий записать необходимую переменную в \textit{ini} файл, метод \textit{Init} нужен для записи значений в словарь и использует вспомогательную функцию \textit{Parse}, которая из текста \textit{ini} файла отделяет переменную в секции от ее значения.
+
+Также были разработаны 2 уровня игры: уровни будут отличаться скоростью движения врагов и их количеством.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{ClassDiagram.png}
+	\caption{Диаграмма классов}	
+\end{figure}
+
+\subsection{Процедура получения исполняемых программных модулей}
+Программный код был скомпилирован с среде \textit{Qt Creator}. Компиляция раздельная: исходный код программы разделён на несколько файлов. Никаких дополнительных ключей не добавлялось, использовались ключи, которые добавляются по умолчанию. Параметры сборки: компилятор С++ MinGW 4.8.2, профиль Qt: Qt 4.8.7, отладчик GDB.
+\subsection{Результаты тестирования}
+Тестирование программы представлено в файле \textit{"main.cpp"} в функции \textit{Main()}. Ожидаемый вывод функции:\\
+\textit{RedEnemy appeared (450,0)\\
+900700}
+
+INI файл:\\\begin{verbatim}
+;here comes the game config
+[setgame]
+width=900
+height=700
+score=100
+level=2
+
+;see the score for game items
+[setscore]
+RedEnemy=100
+BlueEnemy=200
+Cloud=20
+
+[setspeed]
+RedEnemy=10
+BlueEnemy=20
+FlyingObj=10
+
+[setcoord]
+bee_x=450
+bee_y=350
+enemy_x=450
+enemy_y=0 
+
+[logs]
+no logs=1
+
+\end{verbatim}
+
+\newpage
+\setcounter{figure}{1} 
+\setcounter{section}{1} 
+\setcounter{subsection}{1} 
+
+\begin{center}
+	\section*{Приложение А}
+	полный код программы
+	\addcontentsline{toc}{section}{Приложение А}
+\end{center}
+
+\renewcommand{\subsection}{\Asbuk{section}.\arabic{subsection}}
+\setcounter{subsection}{1} 
+\textbf{\subsection{  - Game.h}}
+\addcontentsline{toc}{subsection}{Game.h}
+\lstinputlisting[language=C++]{../QtGame/Game.h}
+
+\setcounter{subsection}{2} 
+\textbf{\subsection{  - GameItem.h}}
+\addcontentsline{toc}{subsection}{GameItem.h}
+\lstinputlisting[language=C++]{../QtGame/GameItem.h}
+
+\setcounter{subsection}{3} 
+\textbf{\subsection{  - Bee.h}}
+\addcontentsline{toc}{subsection}{Bee.h}
+\lstinputlisting[language=C++]{../QtGame/Bee.h}
+
+\setcounter{subsection}{4} 
+\textbf{\subsection{  - Cloud.h}}
+\addcontentsline{toc}{subsection}{Cloud.h}
+\lstinputlisting[language=C++]{../QtGame/Cloud.h}
+
+\setcounter{subsection}{5} 
+\textbf{\subsection{  - FlyingObj.h}}
+\addcontentsline{toc}{subsection}{FlyingObj.h}
+\lstinputlisting[language=C++]{../QtGame/FlyingObj.h}
+
+\setcounter{subsection}{6} 
+\textbf{\subsection{  - Enemy.h}}
+\addcontentsline{toc}{subsection}{Enemy.h}
+\lstinputlisting[language=C++]{../QtGame/Enemy.h}
+
+\setcounter{subsection}{6} 
+\textbf{\subsection{  - Initialization.h}}
+\addcontentsline{toc}{subsection}{Initialization.h}
+\lstinputlisting[language=C++]{../QtGame/Initialization.h}
+
+\setcounter{subsection}{7} 
+\textbf{\subsection{  - GameItem.cpp}}
+\addcontentsline{toc}{subsection}{GameItem.cpp}
+\lstinputlisting[language=C++]{../QtGame/GameItem.cpp}
+
+\setcounter{subsection}{8} 
+\textbf{\subsection{  - main.cpp}}
+\addcontentsline{toc}{subsection}{main.cpp}
+\lstinputlisting[language=C++]{../QtGame/main.cpp}
+
+
+\end{document} % конец документа

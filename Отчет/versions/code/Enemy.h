@@ -23,7 +23,6 @@ public:
         _score = 0;
         _speed = 0;
     }
-    void Update(const Notifer& n) override{}
 };
 //Concrete product type Red
 class RedEnemy :
@@ -105,8 +104,8 @@ public:
 //Working through abstract interface
 class Client {
 	EnemyFactory *_f;
-public:
     Enemy *e;
+public:
     Client(EnemyFactory *f): _f(f) {
         e = _f->CreateEnemy();
     }

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "Game.h"
 #include "observer.h"
+#include "bulletgen.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -46,8 +47,10 @@ void MainWindow::keyPressEvent(QKeyEvent * event)
             break;
 
         case Qt::Key_Space:
-            GameItem* item = static_cast<GameItem*>(new FlyingObj());
-            game.items.push_back(item);
+            BulletGen& gen = BulletGen::Instance();
+            gen.prev = gen.on;
+            gen.on = true;
+            gen.Gen();
             break;
         }
 
@@ -75,6 +78,13 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
         case Qt::Key_Down:
             game.bee->down = false;
             break;
+
+        case Qt::Key_Space:
+            if(!event->isAutoRepeat()){
+                BulletGen& gen = BulletGen::Instance();
+                gen.on = false;
+                break;
+            }
         }
     game.bee->Move();
 

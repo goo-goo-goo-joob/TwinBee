@@ -49,7 +49,9 @@ HEADERS += \
     Initialization.h \
     Flyingobj.h \
     mainwindow.h \
-    observer.h
+    observer.h \
+    bulletgen.h \
+    armygen.h
 
 FORMS += \
     mainwindow.ui

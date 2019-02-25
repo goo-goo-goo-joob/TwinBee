@@ -29,19 +29,19 @@ class Game
         }
         setLevel1();
     }
-    ~Game(){
-        delete bee;
-        for (auto it = items.begin(); it != items.end(); it++) {
-            delete *it;
-            items.erase(it);
-            it--;
-        }
-        for (auto it = enemes.begin(); it != enemes.end(); it++) {
-            delete *it;
-            enemes.erase(it);
-            it--;
-        }
-    }
+	~Game() {
+		delete bee;
+		for (auto it = items.begin(); it != items.end(); it++) {
+			delete *it;
+			items.erase(it);
+			it--;
+		}
+		for (auto it = enemes.begin(); it != enemes.end(); it++) {
+			delete *it;
+			enemes.erase(it);
+			it--;
+		}
+	}
 	Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
     int _width, _height;
@@ -63,23 +63,9 @@ public:
             GameItem* item = static_cast<GameItem*>(new Cloud);
             items.push_back(item);
         }
+        GameItem* item = static_cast<GameItem*>(new FlyingObj(bee->x(), bee->y() - 50));
+        items.push_back(item);
         delete factory;
-    }
-    void Clear(){
-        for (auto it = enemes.begin(); it != enemes.end(); it++) {
-            if (!((*it)->e)->isIn()){
-                delete *it;
-                enemes.erase(it);
-                it--;
-            }
-        }
-        for (auto it = items.begin(); it != items.end(); it++) {
-            if (!(*it)->isIn()){
-                delete *it;
-                items.erase(it);
-                it--;
-            }
-        }
     }
 	static Game& Instance()
     {
@@ -96,7 +82,6 @@ public:
             c->access(visitor);
         }
         bee->access(visitor);
-        Clear();
     }
     void Move(){}
 	int width() const { return _width; }
