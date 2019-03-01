@@ -22,7 +22,7 @@ Cloud::Cloud(){
     Notifer::Instance().Subscribe(this);
 }
 
-Cloud::~Cloud(){
+Cloud::~Cloud() {
     Notifer::Instance().Unsubscribe(this);
 }
 

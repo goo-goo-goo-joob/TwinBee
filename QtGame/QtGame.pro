@@ -50,8 +50,7 @@ HEADERS += \
     Flyingobj.h \
     mainwindow.h \
     observer.h \
-    bulletgen.h \
-    armygen.h
+    bulletgen.h
 
 FORMS += \
     mainwindow.ui

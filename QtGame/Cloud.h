@@ -8,7 +8,7 @@ class Cloud :
     int _speed;
 public:
     Cloud();
-    ~Cloud();
+    ~Cloud() override;
     void access(Visitor &v) override;
     void Update(const Notifer& n) override;
     void Move();

@@ -27,8 +27,9 @@ class GameItem: public Observer
 {
 protected:
     int _x, _y, _speed;
-	bool _play;
+
 public:
+    bool _play;
     GameItem(){
         _play = true;
         _x = 0;

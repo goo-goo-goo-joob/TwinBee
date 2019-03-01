@@ -40,15 +40,21 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
+        Notifer::Instance().Subscribe(this);
+    }
+    ~RedEnemy() override {
+        Notifer::Instance().Unsubscribe(this);
+    }
+    void Update(const Notifer& n){
+        Move();
     }
     void access(Visitor &v) override {
         v.visit(*this);
-      }
+    }
     void Move() {
         _x += _speed;
         _y += _speed;
     }
-    ~RedEnemy() {}
 };
 //Concrete product type Blue
 class BlueEnemy :
@@ -65,6 +71,13 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
+        Notifer::Instance().Subscribe(this);
+    }
+    ~BlueEnemy() override {
+        Notifer::Instance().Unsubscribe(this);
+    }
+    void Update(const Notifer& n){
+        Move();
     }
     void access(Visitor &v) override {
         v.visit(*this);
@@ -73,7 +86,6 @@ public:
         _x -= _speed;
         _y += _speed;
     }
-    ~BlueEnemy(){}
 };
 //Abstract factory
 class EnemyFactory {
@@ -107,11 +119,18 @@ class Client {
 	EnemyFactory *_f;
 public:
     Enemy *e;
+    //QVector<Enemy*> army;
     Client(EnemyFactory *f): _f(f) {
-        e = _f->CreateEnemy();
+//        for(int i = 0; i < 3; i++){
+//            Enemy *e = _f->CreateEnemy();
+//            army.push_back(e);
+//        }
+       e = _f->CreateEnemy();
     }
     void access(Visitor &v)
 	{
+//        for(auto e: army)
+//            e->access(v);
         e->access(v);
 	}
 };

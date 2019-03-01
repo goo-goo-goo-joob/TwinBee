@@ -13,8 +13,8 @@ public:
     void Gen(){
         if (on && !prev){
         Game& game = Game::Instance();
-        GameItem* item = static_cast<GameItem*>(new FlyingObj());
-        game.items.push_back(item);
+        FlyingObj* item = new FlyingObj();
+        game.bulls.push_back(item);
         prev = true;
         }
     }

@@ -6,7 +6,7 @@
 #include "initialization.h"
 
 
-class Game
+class Game : public Observer
 {
     Game(){
         Initialization& ini = Initialization::Instance();
@@ -28,6 +28,7 @@ class Game
             _score = 0;
         }
         setLevel1();
+        Notifer::Instance().Subscribe(this);
     }
     ~Game(){
         delete bee;
@@ -50,12 +51,28 @@ class Game
     int _level;
 public:
     Bee *bee;
+    QVector<FlyingObj*> bulls;
     QVector<GameItem*> items;
     QVector<Client*> enemes;
+    void Collide(){
+        for (auto b: bulls){
+            for (auto i: enemes){
+                if (b->X() < i->e->X() + 20 && b->X() > i->e->X() - 20 && b->Y() > i->e->Y() - 20 && b->Y() < i->e->Y() + 20){
+//                    delete i;
+//                    enemes.erase(&i);
+                    i->e->_play = false;
+                }
+            }
+        }
+    }
+    void Update(const Notifer& n) {
+        Collide();
+        //cout<<")))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))0)";
+    }
     void setLevel1(){
         bee = new Bee();
         EnemyFactory *factory = new BlueEnemyFactory;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             Client* enemy = static_cast<Client*>(new Client(factory));
             enemes.push_back(enemy);
         }
@@ -66,8 +83,9 @@ public:
         delete factory;
     }
     void Clear(){
+        //add for bulls
         for (auto it = enemes.begin(); it != enemes.end(); it++) {
-            if (!((*it)->e)->isIn()){
+            if (!(*it)->e->isIn() || !(*it)->e->_play){//((*it)->army)->isIn())
                 delete *it;
                 enemes.erase(it);
                 it--;
@@ -93,6 +111,9 @@ public:
             c->access(visitor);
         }
         for(auto c: items){
+            c->access(visitor);
+        }
+        for(auto c: bulls){
             c->access(visitor);
         }
         bee->access(visitor);
