@@ -19,6 +19,7 @@ Cloud::Cloud(){
     y /= 2;
     _x = rand()%x;
     _y = rand()%y;
+    haveBell = true;
     Notifer::Instance().Subscribe(this);
 }
 
@@ -33,9 +34,5 @@ void Cloud::Move(){
     _y+=_speed;
 }
 void Cloud::Update(const Notifer& n){
-    if(n.getStage() % 30 == 0){
-        cout << "HERHOVOE OBLAKO!!!" << endl;
-
-    }
     Move();
 }

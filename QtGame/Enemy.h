@@ -24,6 +24,7 @@ public:
         _speed = 0;
     }
     void Update(const Notifer& n) override{}
+    int score() const { return _score; }
 };
 //Concrete product type Red
 class RedEnemy :

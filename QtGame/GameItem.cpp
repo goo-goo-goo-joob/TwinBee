@@ -16,8 +16,7 @@ void DrawGameItems::visit(Bee &b){
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(b.X(),b.Y(), b.SizeX(),b.SizeY());
-    cout << b.X() << endl;
-    painter.save();
+    painter.end();
 }
 
 void DrawGameItems::visit(Cloud &c){
@@ -28,7 +27,7 @@ void DrawGameItems::visit(Cloud &c){
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(c.X(),c.Y(), 50,30);
-    painter.save();
+    painter.end();
 }
 
 void DrawGameItems::visit(FlyingObj &f){
@@ -39,7 +38,18 @@ void DrawGameItems::visit(FlyingObj &f){
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawEllipse(f.X(),f.Y(), 10,10);
-    painter.save();
+    painter.end();
+}
+
+void DrawGameItems::visit(Bell &b){
+    QPainter painter(e);
+    QColor gray("#A52A2A");
+    Qt::BrushStyle style = Qt::SolidPattern;
+    QBrush brush(gray, style);
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(b.X(),b.Y(), 15,15);
+    painter.end();
 }
 
 //void MoveGameItems::visit(Bee &b) {
@@ -54,7 +64,7 @@ void DrawGameItems::visit(RedEnemy &r){
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawRect(r.X(),r.Y(), 25,25);
-    painter.save();
+    painter.end();
 }
 
 void DrawGameItems::visit(BlueEnemy &b){
@@ -65,5 +75,5 @@ void DrawGameItems::visit(BlueEnemy &b){
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
     painter.drawRect(b.X(),b.Y(), 25,25);
-    painter.save();
+    painter.end();
 }

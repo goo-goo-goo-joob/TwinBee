@@ -1,11 +1,13 @@
 #include "observer.h"
 #include "GameItem.h"
+#include "initialization.h"
 
 Notifer::Notifer() {
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(Notify()));
     stage = 0;
-    period = 100;
+    Initialization& ini = Initialization::Instance();
+    period = ini.Sett("timer/peroid", 30);
     timer->setInterval(period);
     timer->start();
 }

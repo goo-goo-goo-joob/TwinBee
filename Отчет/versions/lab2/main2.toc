@@ -1,0 +1,20 @@
+\babel@toc {russian}{}
+\contentsline {section}{Постановка задачи}{3}{section*.2}
+\contentsline {section}{\numberline {1}Основная часть}{4}{section.1}
+\contentsline {subsection}{\numberline {1.1}Общая идея решения задачи}{4}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Структура и принципы действия}{4}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Процедура получения исполняемых программных модулей}{5}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Результаты тестирования}{5}{subsection.1.4}
+\contentsline {section}{Приложение А}{7}{section*.5}
+\contentsline {subsection}{Game.h}{7}{section*.6}
+\contentsline {subsection}{GameItem.h}{10}{lstnumber.-1.97}
+\contentsline {subsection}{Bee.h}{12}{lstnumber.-2.71}
+\contentsline {subsection}{Cloud.h}{13}{lstnumber.-3.30}
+\contentsline {subsection}{FlyingObj.h}{14}{lstnumber.-4.34}
+\contentsline {subsection}{Enemy.h}{14}{lstnumber.-5.23}
+\contentsline {subsection}{Initialization.h}{18}{lstnumber.-6.116}
+\contentsline {subsection}{MainWindow.h}{22}{lstnumber.-7.125}
+\contentsline {subsection}{GameItem.cpp}{22}{lstnumber.-8.21}
+\contentsline {subsection}{main.cpp}{24}{lstnumber.-9.69}
+\contentsline {subsection}{MainWindow.cpp}{25}{lstnumber.-10.28}
+\contentsline {subsection}{Settings.ini}{27}{lstnumber.-11.41}

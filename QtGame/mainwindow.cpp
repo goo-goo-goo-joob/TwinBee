@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Game& game = Game::Instance();
     this->setFixedSize(game.width(),game.height());
     Notifer::Instance().Subscribe(this);
+    shootID = 0;
 }
 
 MainWindow::~MainWindow()
@@ -30,32 +31,33 @@ void MainWindow::keyPressEvent(QKeyEvent * event)
     Game& game = Game::Instance();
     switch(event->key()){
 
-        case Qt::Key_Up:
-            game.bee->up = true;
-            break;
+    case Qt::Key_Up:
+        game.bee->up = true;
+        break;
 
-        case Qt::Key_Right:
-            game.bee->right=true;
-            break;
+    case Qt::Key_Right:
+        game.bee->right=true;
+        break;
 
-        case Qt::Key_Left:
-            game.bee->left=true;
-            break;
+    case Qt::Key_Left:
+        game.bee->left=true;
+        break;
 
-        case Qt::Key_Down:
-            game.bee->down = true;
-            break;
+    case Qt::Key_Down:
+        game.bee->down = true;
+        break;
 
-        case Qt::Key_Space:
-            BulletGen& gen = BulletGen::Instance();
-            gen.prev = gen.on;
-            gen.on = true;
-            gen.Gen();
-            break;
-        }
+    }
 
-        game.bee->Move();
-        update();
+    BulletGen& gen = BulletGen::Instance();
+    if (event->key() == Qt::Key_Space){
+        gen.prev = gen.on;
+        gen.on = true;
+        gen.Update(Notifer::Instance());
+    }
+
+    game.bee->Move();
+    update();
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event){
@@ -63,29 +65,29 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
     Game& game = Game::Instance();
     switch(event->key()){
 
-        case Qt::Key_Up:
-            game.bee->up = false;
-            break;
+    case Qt::Key_Up:
+        game.bee->up = false;
+        break;
 
-        case Qt::Key_Right:
-            game.bee->right=false;
-            break;
+    case Qt::Key_Right:
+        game.bee->right=false;
+        break;
 
-        case Qt::Key_Left:
-            game.bee->left=false;
-            break;
+    case Qt::Key_Left:
+        game.bee->left=false;
+        break;
 
-        case Qt::Key_Down:
-            game.bee->down = false;
-            break;
+    case Qt::Key_Down:
+        game.bee->down = false;
+        break;
 
-        case Qt::Key_Space:
-            if(!event->isAutoRepeat()){
-                BulletGen& gen = BulletGen::Instance();
-                gen.on = false;
-                break;
-            }
-        }
+    }
+
+    BulletGen& gen = BulletGen::Instance();
+    if(event->key() == Qt::Key_Space && !event->isAutoRepeat()){
+                    BulletGen& gen = BulletGen::Instance();
+                    gen.on = false;
+                }
     game.bee->Move();
 
 }

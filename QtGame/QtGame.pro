@@ -29,7 +29,8 @@ SOURCES += \
     cloud.cpp \
     observer.cpp \
     bee.cpp \
-    flyingobj.cpp
+    flyingobj.cpp \
+    bell.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -50,7 +51,8 @@ HEADERS += \
     Flyingobj.h \
     mainwindow.h \
     observer.h \
-    bulletgen.h
+    bulletgen.h \
+    bell.h
 
 FORMS += \
     mainwindow.ui

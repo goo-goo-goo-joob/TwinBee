@@ -9,6 +9,7 @@ class Cloud;
 class FlyingObj;
 class RedEnemy;
 class BlueEnemy;
+class Bell;
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
     virtual void visit(Bee  &b) = 0;
     virtual void visit(Cloud  &c) = 0;
     virtual void visit(FlyingObj  &f) = 0;
+    virtual void visit(Bell  &b) = 0;
     virtual void visit(RedEnemy  &r) = 0;
     virtual void visit(BlueEnemy  &b) = 0;
     virtual ~Visitor() = default;
@@ -27,7 +29,6 @@ class GameItem: public Observer
 {
 protected:
     int _x, _y, _speed;
-
 public:
     bool _play;
     GameItem(){
@@ -57,6 +58,7 @@ public:
     void visit(Bee &b)override ;
     void visit(Cloud &c) override;
     void visit(FlyingObj &f) override;
+    void visit(Bell  &b) override;
     void visit(RedEnemy &r) override;
     void visit(BlueEnemy &b) override;
 };

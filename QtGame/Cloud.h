@@ -7,6 +7,7 @@ class Cloud :
 {
     int _speed;
 public:
+    int haveBell;
     Cloud();
     ~Cloud() override;
     void access(Visitor &v) override;

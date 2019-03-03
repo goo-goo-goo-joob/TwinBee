@@ -21,6 +21,7 @@ public:
     }
 private:
     Ui::MainWindow *ui;
+    int shootID = 0;
 public slots:
     void keyReleaseEvent(QKeyEvent*);
     void keyPressEvent(QKeyEvent*);

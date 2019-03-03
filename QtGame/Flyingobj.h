@@ -6,6 +6,7 @@
 class FlyingObj :
     public GameItem
 {
+protected:
     int _speed;
 public:
     FlyingObj();
