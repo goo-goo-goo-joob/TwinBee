@@ -3,8 +3,7 @@
 
 bool GameItem::isIn(){
     Game& game = Game::Instance();
-    return (0 < _x && _x < game.width()
-            && 0 <_y && _y <game.height() );
+    return (0 < _x && _x < game.width() && 0 <_y && _y <game.height() );
 }
 
 GameItem::~GameItem(){}
@@ -16,9 +15,8 @@ void DrawGameItems::visit(Bee &b){
     QBrush brush(yellow, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawEllipse(b.x(),b.y(), 25,25);
-    cout << b.x() << endl;
-    painter.save();
+    painter.drawEllipse(b.X(),b.Y(), b.SizeX(),b.SizeY());
+    painter.end();
 }
 
 void DrawGameItems::visit(Cloud &c){
@@ -28,8 +26,8 @@ void DrawGameItems::visit(Cloud &c){
     QBrush brush(gray, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawEllipse(c.x(),c.y(), 50,30);
-    painter.save();
+    painter.drawEllipse(c.X(),c.Y(), 50,30);
+    painter.end();
 }
 
 void DrawGameItems::visit(FlyingObj &f){
@@ -39,13 +37,24 @@ void DrawGameItems::visit(FlyingObj &f){
     QBrush brush(gray, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawEllipse(f.x(),f.y(), 10,10);
-    painter.save();
+    painter.drawEllipse(f.X(),f.Y(), 10,10);
+    painter.end();
 }
 
-void MoveGameItems::visit(Bee &b) {
-    b.x(b.x() + b.speed());
+void DrawGameItems::visit(Bell &b){
+    QPainter painter(e);
+    QColor gray("#A52A2A");
+    Qt::BrushStyle style = Qt::SolidPattern;
+    QBrush brush(gray, style);
+    painter.setBrush(brush);
+    painter.setPen(Qt::NoPen);
+    painter.drawEllipse(b.X(),b.Y(), 15,15);
+    painter.end();
 }
+
+//void MoveGameItems::visit(Bee &b) {
+//    b.x(b.x() + b.speed());
+//}
 
 void DrawGameItems::visit(RedEnemy &r){
     QPainter painter(e);
@@ -54,8 +63,8 @@ void DrawGameItems::visit(RedEnemy &r){
     QBrush brush(red, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawRect(r.x(),r.y(), 25,25);
-    painter.save();
+    painter.drawRect(r.X(),r.Y(), 25,25);
+    painter.end();
 }
 
 void DrawGameItems::visit(BlueEnemy &b){
@@ -65,6 +74,6 @@ void DrawGameItems::visit(BlueEnemy &b){
     QBrush brush(blue, style);
     painter.setBrush(brush);
     painter.setPen(Qt::NoPen);
-    painter.drawRect(b.x(),b.y(), 25,25);
-    painter.save();
+    painter.drawRect(b.X(),b.Y(), 25,25);
+    painter.end();
 }

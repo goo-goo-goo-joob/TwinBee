@@ -6,18 +6,16 @@
 class FlyingObj :
     public GameItem
 {
+protected:
     int _speed;
 public:
-    FlyingObj(int x, int y){
-        Initialization& ini = Initialization::Instance();
-        _speed = ini.Sett("setspeed/FlyingObj");
-        if (_speed < 0){
-            _speed = 0;
-        }
-        _x = x;
-        _y = y;
-    }
+    FlyingObj();
+    ~FlyingObj();
     void access(Visitor &v) override {
         v.visit(*this);
+    }
+    void Update(const Notifer& n) override;
+    void Move(){
+        _y -= _speed;
     }
 };

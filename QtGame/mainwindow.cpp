@@ -85,9 +85,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
 
     BulletGen& gen = BulletGen::Instance();
     if(event->key() == Qt::Key_Space && !event->isAutoRepeat()){
-                    BulletGen& gen = BulletGen::Instance();
-                    gen.on = false;
-                }
+        BulletGen& gen = BulletGen::Instance();
+        gen.on = false;
+    }
     game.bee->Move();
 
 }

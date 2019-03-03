@@ -2,11 +2,12 @@
 #include "Bee.h"
 #include "Enemy.h"
 #include "Cloud.h"
+#include "Bell.h"
 #include "flyingobj.h"
 #include "initialization.h"
 
 
-class Game
+class Game : public Observer
 {
     Game(){
         Initialization& ini = Initialization::Instance();
@@ -28,24 +29,87 @@ class Game
             _score = 0;
         }
         setLevel1();
+        Notifer::Instance().Subscribe(this);
     }
     ~Game(){
+        Initialization& ini = Initialization::Instance();
+        ini.Save("setgame", "level", 1);
+        ini.Save("setgame", "score", _score);
+        ini.Save("logs", "no logs", 1);
         delete bee;
-        for(auto c: items){
-            delete c;
+        for (auto it = items.begin(); it != items.end(); it++) {
+            delete *it;
+            items.erase(it);
+            it--;
+        }
+        for (auto it = enemes.begin(); it != enemes.end(); it++) {
+            delete *it;
+            enemes.erase(it);
+            it--;
+        }
+        for (auto it = bulls.begin(); it != bulls.end(); it++) {
+            delete *it;
+            bulls.erase(it);
+            it--;
         }
     }
-	Game(Game const&) = delete;
+    Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
-
     int _width, _height;
     int _score;
     bool _play;
     int _level;
 public:
     Bee *bee;
-    QVector<GameItem*> items;
+    QVector<FlyingObj*> bulls;
+    QVector<Cloud*> items;
     QVector<Client*> enemes;
+    QVector<Bell*> bells;
+    void Collide(){
+        for (auto b: bulls){
+            for (auto i: enemes){
+                if (b->X() > i->e->X() /*+ 25*/ && b->X() + 10 < i->e->X() + 25 &&
+                        b->Y() < i->e->Y() + 25 && b->Y() + 10 > i->e->Y()){
+                    i->e->_play = false;
+                    b->_play = false;
+                    _score += i->e->score();
+                }
+            }
+        }
+        for (auto b: bulls){
+            for (auto i: items){
+                if (b->X() > i->X() /*+ 25*/ && b->X() + 10 < i->X() + 50 &&
+                        b->Y() < i->Y() + 30 && b->Y() + 10 > i->Y()){
+                    if(i->haveBell){
+                        i->haveBell = false;
+                        //_score += i->score();
+                        bells.push_back(new Bell(i->X() + 15, i->Y()));
+                    }
+                    b->_play = false;
+                }
+            }
+        }
+        for (auto b: bulls){
+            for (auto i: bells){
+                if (b->X() > i->X() /*+ 25*/ && b->X() + 10 < i->X() + 15 &&
+                        b->Y() < i->Y() + 15 && b->Y() + 10 > i->Y()){
+                    i->moveType = 1;
+                    i->start = Notifer::Instance().getStage();
+                    b->_play = false;
+                }
+            }
+        }
+        for (auto i: bells){
+            if (i->X() > bee->X() /*+ 25*/ && i->X() + 15 < bee->X() + 25 &&
+                    i->Y() < bee->Y() + 25 && i->Y() + 15 > bee->Y()){
+                _score += i->score();
+                i->_play = false;
+            }
+        }
+    }
+    void Update(const Notifer& n) {
+        Collide();
+    }
     void setLevel1(){
         bee = new Bee();
         EnemyFactory *factory = new BlueEnemyFactory;
@@ -54,17 +118,45 @@ public:
             enemes.push_back(enemy);
         }
         for (int i = 0; i < 3; i++) {
-            GameItem* item = static_cast<GameItem*>(new Cloud);
+            Cloud* item = static_cast<Cloud*>(new Cloud);
             items.push_back(item);
         }
-        GameItem* item = static_cast<GameItem*>(new FlyingObj(bee->x(), bee->y() - 50));
-        items.push_back(item);
         delete factory;
     }
-	static Game& Instance()
+    void Clear(){
+        for (auto it = bulls.begin(); it != bulls.end(); it++) {
+            if (!(*it)->isIn() || !(*it)->_play){
+                delete *it;
+                bulls.erase(it);
+                it--;
+            }
+        }
+        for (auto it = enemes.begin(); it != enemes.end(); it++) {
+            if (!(*it)->e->isIn() || !(*it)->e->_play){//((*it)->army)->isIn())
+                delete *it;
+                enemes.erase(it);
+                it--;
+            }
+        }
+        for (auto it = items.begin(); it != items.end(); it++) {
+            if (!(*it)->isIn()){
+                delete *it;
+                items.erase(it);
+                it--;
+            }
+        }
+        for (auto it = bells.begin(); it != bells.end(); it++) {
+            if (!(*it)->isIn() || !(*it)->_play){
+                delete *it;
+                bells.erase(it);
+                it--;
+            }
+        }
+    }
+    static Game& Instance()
     {
-		static Game g;
-		return g;
+        static Game g;
+        return g;
     }
     void Draw(QMainWindow *e)
     {
@@ -75,13 +167,20 @@ public:
         for(auto c: items){
             c->access(visitor);
         }
+        for(auto c: bulls){
+            c->access(visitor);
+        }
+        for(auto c: bells){
+            c->access(visitor);
+        }
         bee->access(visitor);
+        Clear();
     }
     void Move(){}
-	int width() const { return _width; }
+    int width() const { return _width; }
     int height() const { return _height; }
     int score() const { return _score; }
-	bool play() const { return _play; }
+    bool play() const { return _play; }
     int level() const { return _level; }
     void height(int height) { _height = height; }
     void width(int width) { _width = width; }

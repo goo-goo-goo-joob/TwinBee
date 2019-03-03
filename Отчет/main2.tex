@@ -22,29 +22,37 @@
 \section*{Постановка задачи}
 \addcontentsline{toc}{section}{Постановка задачи}
 
-Разработать и реализовать набор классов с использованием библиотеки \textit{Qt 4.8}, позволяющей выполнить отрисовку объектов из лабораторной работы 1 согласно варианту 6 (\textit{TwinBee}). Для отрисовки использовать средства класса \textit{QPainter}, объекты представить в виде разноцветных плоских фигур. Применить паттерн посетитель.
+Рассмотреть паттерн проектирования наблюдатель. Реализовать обработку нажатий клавиш клавиатуры с использованием механизма сигналов и слотов библиотеки \textit{Qt}. Доработать и реализовать логику игры (при нажатии клавиш объекты должны изменять положение).
 
 
 \newpage
 
 \section{Основная часть}
 \subsection{Общая идея решения задачи}
-Проект был разработан с главным окном \textit{MainWindow} на основе базового класса \textit{QMainWindow}. Для отрискови объектов был использован класс \textit{QPainer}, методы \\ \textit{drawRect} и \textit{drawEllipse}, то есть все объекты были представлены в виде разноцветных овалов или прямоугольников. Был применен паттерн посетитель: поведение (функции \textit{Draw} и \textit{Move} классов  \textit{Bee}, \textit{Cloud}, \textit{FlyingObj}, \textit{RedEnemy} и \textit{BlueEnemy}), было реализовано в отдельном классе \textit{Visitor}.
+В работе была реализована обработка движения пчелы при нажатии на клавиатуру с помощью слотов \textit{keyReleaseEvent} и \textit{keyPressEvent}. Была улучшена логика игры: появилась возможность убивать врагов, стрелять в облака и ловить колокольчик, выпадающий из облака.
+Также для более удобной разработки игры дополнительно были применены паттерны (одиночка, адаптер) и механизм таймера из последующих лабораторных работ.
+В проекте был применен поведенческий паттерн проектирования наблюдатель, который позволяет получать объектам оповещения информацию о состоянии уведомителя (таймера).
+
 \subsection{Структура и принципы действия}
-Класс \textit{MainWindow}, который является наследником базового класса \textit{QMainWindow}, содержит макрос \textit{Q\_OBJECT}. Для проверки корректной работы программы был реализован слот \textit{keyReleaseEvent}, который при нажатии на кнопки \textit{лево} и \textit{право} перемещает объект пчелы по экрану. В классе \textit{MainWindow} переопределена функция базового класса \textit{paintEvent}, которая вызывает функцию \textit{Draw} в классе \textit{Game}.
+Класс \textit{MainWindow} содержит слоты \textit{keyReleaseEvent} и \textit{keyPressEvent}, которые позволяют обрабатывать нажатия с клавиатуры. При нажатии на кнопки влево, вправо, вверх и вниз (обрабатывает слот \textit{keyPressEvent}) пчела перемещается по полю в соответствии с заданным направлением. При нажатии на пробел создается экземпляр класса пули, которая летит вверх. Когда кнопка отпущена, в слоте \textit{keyReleaseEvent} выполняется остановка движения. 
 
-Для удобства реализации функции передвижения и добавления в классы новых однотипных методов был применен паттерн посетитель. Класс \textit{Visitor} содержит методы \textit{visit} для каждого класса, отличающиеся типом входного параметра, чтобы запустить метод для конкретного класса. Класс \textit{DrawGameItems} является посетителем, реализующим конкретное поведение классов при передвижении. В реализованном ранее родительском классе \textit{GameItem} описывается чисто виртуальный метод доступа посетителя \textit{access} с типом входного параметра \textit{Visitor}. В каждом конкретном классе (\textit{Bee}, \textit{Cloud}, \textit{FlyingObj}, \textit{RedEnemy} и \textit{BlueEnemy}) переопределяются методы доступа посетителя \textit{access}: вызывается функция \textit{visit} для данного класса. Также для проверки корректной работы паттерна был добавлен еще один класс конкретного посетителя \textit{MoveGameItems}, который должен будет описывать перемещение объектов.
+В классе \textit{Game} была реализована функция \textit{Collide}, обрабатывающая столкновения объектов. Отдельно рассмотрено столкновение пули и врага (враг и пуля исчезают, игроку начисляются баллы), столкновение пули и облака (если из облака ранее не вылетал колокольчик, то создается экземпляр класса Bell, пуля исчезает), столкновение пули и колокольчика (изменяется тип движения колокольчика, он поделает вверх, пуля исчезает), столкновение пчелы и колокольчика (колокольчик исчезает, игроку начисляются очки).
 
-В классе \textit{DrawGameItems} содержится закрытое поле \textit{QMainWindow}, которое определяет событие изменения формы, и в котором переопределены функции \textit{visit} для всех классов. Общий принцип работы функций одинаковый для всех классов. В функции создается экземпляр класса \textit{QPainter}, который будет рисовать в \textit{MainWindow}, настраиваются цвет и стиль кисти, рисуется геометрическая фигура с помощью функций \textit{drawEllipse} и \textit{drawRect}, и сохраняется событие.
+В работе был реализован паттерн наблюдатель с использованием механизма таймера (класс \textit{QTimer}). Класс \textit{Notifer} - класс одиночка, который определяет методы подписки, отписки и уведомления наблюдателей. Класс наследуется от класса \textit{QObject} и содержит макрос \textit{Q\_OBJECT}. \textit{Notifer} включает в себя вектор подписчиков, поле \textit{QTimer} (дополнительно фазу и период таймера, период можно задать в \textit{INI}-файле). Содержит слот \textit{Notify}, который уведомляет все объекты из вектора подписчиков. Класс \textit{Observer} является чисто виртуальным классом-подписчиком, который может получать уведомления от \textit{Notifer}. Он содержит единственный метод \textit{Update} для конкретного уведомителя. От класса \textit{Observer} наследуются классы \textit{MainWindow} (чтобы обновлять форму в соответствии с таймером), \textit{GameItem} (чтобы пермещать объекты).
 
-Функция \textit{Draw} в классе \textit{Game} создает экземпляр класса \textit{DrawGameItems} и для каждого объекта игры вызывает функцию \textit{access} с созданным ранее посетителем.
+В игру был добавлен класс \textit{Bell}, который приблизит функционал игры к прототипу (класс описывает 2 типа движения в отличие от базового класса \textit{FlyingObj}). 
 
-Функция \textit{setLevel} производит создание экземпляра класса \textit{Bee}, заполнение вектора врагов \textit{enemes} экземплярами классов \textit{RedEnemy} или \textit{BlueEnemy} (в зависимости от созданной конкретной фабрики \textit{EnemyFactory}), заполнение вектора \textit{items} экземплярами классов \textit{Cloud} и \textit{FlyingObj}.
+Был реализован класс-адаптер \textit{BulletGen} (также и одиночка), в котором был реализован механизм пистолета. Класс создает экземпляр пули, если текущее состояние кнопки - нажата, а предыдущее - отпущена, и интервал между выстрелами не должен быть меньше \textit{shootTime}. Этот класс работает одновременно и с классом \textit{MainWindow}, и с классом \textit{FlyingObj}. Адаптер получает вызовы от \textit{MainWindow} (клиента), а затем в правильном формате создает экземпляр класса \textit{FlyingObj} (сервиса).
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{ClassDiagram.png}
+	\includegraphics[width=\linewidth]{ClassDiagram1.png}
 	\caption{Диграма классов}	
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{ClassDiagram2.png}
+	\caption{Диграма классов (продолжение)}	
 \end{figure}
 
 \subsection{Процедура получения исполняемых программных модулей}
@@ -73,60 +81,100 @@
 \setcounter{subsection}{1} 
 \textbf{\subsection{  - Game.h}}
 \addcontentsline{toc}{subsection}{Game.h}
-\lstinputlisting[language=C++]{versions/code/Game.h}
+\lstinputlisting[language=C++]{../QtGame/Game.h}
 
 \setcounter{subsection}{2} 
 \textbf{\subsection{  - GameItem.h}}
 \addcontentsline{toc}{subsection}{GameItem.h}
-\lstinputlisting[language=C++]{versions/code/GameItem.h}
+\lstinputlisting[language=C++]{../QtGame/GameItem.h}
 
 \setcounter{subsection}{3} 
 \textbf{\subsection{  - Bee.h}}
 \addcontentsline{toc}{subsection}{Bee.h}
-\lstinputlisting[language=C++]{versions/code/Bee.h}
+\lstinputlisting[language=C++]{../QtGame/Bee.h}
 
 \setcounter{subsection}{4} 
 \textbf{\subsection{  - Cloud.h}}
 \addcontentsline{toc}{subsection}{Cloud.h}
-\lstinputlisting[language=C++]{versions/code/Cloud.h}
+\lstinputlisting[language=C++]{../QtGame/Cloud.h}
 
 \setcounter{subsection}{5} 
 \textbf{\subsection{  - FlyingObj.h}}
 \addcontentsline{toc}{subsection}{FlyingObj.h}
-\lstinputlisting[language=C++]{versions/code/FlyingObj.h}
+\lstinputlisting[language=C++]{../QtGame/FlyingObj.h}
 
 \setcounter{subsection}{6} 
-\textbf{\subsection{  - Enemy.h}}
-\addcontentsline{toc}{subsection}{Enemy.h}
-\lstinputlisting[language=C++]{versions/code/Enemy.h}
+\textbf{\subsection{  - Bell.h}}
+\addcontentsline{toc}{subsection}{Bell.h}
+\lstinputlisting[language=C++]{../QtGame/Bell.h}
 
 \setcounter{subsection}{7} 
-\textbf{\subsection{  - Initialization.h}}
-\addcontentsline{toc}{subsection}{Initialization.h}
-\lstinputlisting[language=C++]{versions/code/Initialization.h}
+\textbf{\subsection{  - Bulletgen.h}}
+\addcontentsline{toc}{subsection}{Bulletgen.h}
+\lstinputlisting[language=C++]{../QtGame/Bulletgen.h}
 
 \setcounter{subsection}{8} 
-\textbf{\subsection{  - MainWindow.h}}
-\addcontentsline{toc}{subsection}{MainWindow.h}
-\lstinputlisting[language=C++]{versions/code/mainwindow.h}
+\textbf{\subsection{  - Enemy.h}}
+\addcontentsline{toc}{subsection}{Enemy.h}
+\lstinputlisting[language=C++]{../QtGame/Enemy.h}
 
 \setcounter{subsection}{9} 
-\textbf{\subsection{  - GameItem.cpp}}
-\addcontentsline{toc}{subsection}{GameItem.cpp}
-\lstinputlisting[language=C++]{versions/code/GameItem.cpp}
+\textbf{\subsection{  - Initialization.h}}
+\addcontentsline{toc}{subsection}{Initialization.h}
+\lstinputlisting[language=C++]{../QtGame/Initialization.h}
 
 \setcounter{subsection}{10} 
-\textbf{\subsection{  - main.cpp}}
-\addcontentsline{toc}{subsection}{main.cpp}
-\lstinputlisting[language=C++]{versions/code/main.cpp}
+\textbf{\subsection{  - MainWindow.h}}
+\addcontentsline{toc}{subsection}{MainWindow.h}
+\lstinputlisting[language=C++]{../QtGame/mainwindow.h}
 
 \setcounter{subsection}{11} 
-\textbf{\subsection{  - MainWindow.cpp}}
-\addcontentsline{toc}{subsection}{MainWindow.cpp}
-\lstinputlisting[language=C++]{versions/code/mainwindow.cpp}
+\textbf{\subsection{  - Observer.h}}
+\addcontentsline{toc}{subsection}{Observer.h}
+\lstinputlisting[language=C++]{../QtGame/Observer.h}
 
 \setcounter{subsection}{12} 
+\textbf{\subsection{  - GameItem.cpp}}
+\addcontentsline{toc}{subsection}{GameItem.cpp}
+\lstinputlisting[language=C++]{../QtGame/GameItem.cpp}
+
+\setcounter{subsection}{13} 
+\textbf{\subsection{  - Bee.cpp}}
+\addcontentsline{toc}{subsection}{Bee.cpp}
+\lstinputlisting[language=C++]{../QtGame/Bee.cpp}
+
+\setcounter{subsection}{14} 
+\textbf{\subsection{  - Bell.cpp}}
+\addcontentsline{toc}{subsection}{Bell.cpp}
+\lstinputlisting[language=C++]{../QtGame/Bell.cpp}
+
+\setcounter{subsection}{15} 
+\textbf{\subsection{  - Cloud.cpp}}
+\addcontentsline{toc}{subsection}{Cloud.cpp}
+\lstinputlisting[language=C++]{../QtGame/Cloud.cpp}
+
+\setcounter{subsection}{16} 
+\textbf{\subsection{  - Flyingobj.cpp}}
+\addcontentsline{toc}{subsection}{Flyingobj.cpp}
+\lstinputlisting[language=C++]{../QtGame/Flyingobj.cpp}
+
+\setcounter{subsection}{17} 
+\textbf{\subsection{  - Observer.cpp}}
+\addcontentsline{toc}{subsection}{Observer.cpp}
+\lstinputlisting[language=C++]{../QtGame/Observer.cpp}
+
+\setcounter{subsection}{18} 
+\textbf{\subsection{  - main.cpp}}
+\addcontentsline{toc}{subsection}{main.cpp}
+\lstinputlisting[language=C++]{../QtGame/main.cpp}
+
+\setcounter{subsection}{19} 
+\textbf{\subsection{  - MainWindow.cpp}}
+\addcontentsline{toc}{subsection}{MainWindow.cpp}
+\lstinputlisting[language=C++]{../QtGame/mainwindow.cpp}
+
+\setcounter{subsection}{20} 
 \textbf{\subsection{  - Settings.ini}}
 \addcontentsline{toc}{subsection}{Settings.ini}
-\lstinputlisting{data/settings.ini}
+\lstinputlisting{settings.ini}
 \end{document} % конец документа

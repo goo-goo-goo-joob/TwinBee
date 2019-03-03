@@ -37,38 +37,29 @@ public:
             QTextStream stream( &file );
             do {
                 line = file.readLine();
-                if (line.contains(section, Qt::CaseSensitive)
-                        && !line.isEmpty() && line[0] != ';')
+                if (line.contains(section, Qt::CaseSensitive) && !line.isEmpty() && line[0] != ';')
                 {
                     stream << line;
                     line = file.readLine();
                     while(!line.isEmpty() && line != "\n" && line[0] != ';'){
-                        if (line.contains(variable,
-                                          Qt::CaseSensitive)
-                                && !line.isEmpty()
-                                && line[0] != ';')
+                        if (line.contains(variable, Qt::CaseSensitive) && !line.isEmpty() && line[0] != ';')
                         {
                             flag = true;
-                            line = variable + "="
-                                    + QString::number(value)
-                                    + '\n';
+                            line = variable + "=" + QString::number(value) + '\n';
                         }
                         stream << line;
                         line = file.readLine();
                     }
                     if (!flag){
                         flag = true;
-                        line = variable + "="
-                                + QString::number(value)
-                                + "\n\n";
+                        line = variable + "=" + QString::number(value) + "\n\n";
                     }
                 }
                 stream << line;
             } while (!line.isEmpty());
             if (!flag){
                 stream << "\n\n[" + section + "]" + '\n';
-                stream << variable + "="
-                          + QString::number(value) + "\n";
+                stream << variable + "=" + QString::number(value) + "\n";
             }
             file.resize(0);
             file.close();
