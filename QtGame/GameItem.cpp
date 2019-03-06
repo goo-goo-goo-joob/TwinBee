@@ -17,7 +17,7 @@ void DrawGameItems::visit(Bee &b){
 //    painter.setPen(Qt::NoPen);
 //    painter.drawEllipse(b.X(),b.Y(), b.SizeX(),b.SizeY());
     QImage img(25, 25, QImage::Format_RGB32);
-    img.load("images/Bee1.png");
+    img.load("images/Bee.png");
     QImage img2 = img.scaled(50, 50, Qt::KeepAspectRatio);
     painter.drawImage(b.X(),b.Y(),img2);
     painter.end();
@@ -32,7 +32,7 @@ void DrawGameItems::visit(Cloud &c){
 //    painter.setPen(Qt::NoPen);
 //    painter.drawEllipse(c.X(),c.Y(), 50,30);
     QImage img(0, 0, QImage::Format_RGB32);
-    img.load("images/cloud.jpg");
+    img.load("images/cloud.png");
     QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
     painter.drawImage(c.X(),c.Y(),img2);
 
@@ -52,12 +52,17 @@ void DrawGameItems::visit(FlyingObj &f){
 
 void DrawGameItems::visit(Bell &b){
     QPainter painter(e);
-    QColor gray("#A52A2A");
-    Qt::BrushStyle style = Qt::SolidPattern;
-    QBrush brush(gray, style);
-    painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
-    painter.drawEllipse(b.X(),b.Y(), 15,15);
+//    QColor gray("#A52A2A");
+//    Qt::BrushStyle style = Qt::SolidPattern;
+//    QBrush brush(gray, style);
+//    painter.setBrush(brush);
+//    painter.setPen(Qt::NoPen);
+//    painter.drawEllipse(b.X(),b.Y(), 15,15);
+    QImage img(0, 0, QImage::Format_RGB32);
+    img.load("images/bell.png");
+    QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),img2);
+
     painter.end();
 }
 
@@ -74,11 +79,16 @@ void DrawGameItems::visit(RedEnemy &r){
 
 void DrawGameItems::visit(BlueEnemy &b){
     QPainter painter(e);
-    QColor blue("#0000CD");
-    Qt::BrushStyle style = Qt::SolidPattern;
-    QBrush brush(blue, style);
-    painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
-    painter.drawRect(b.X(),b.Y(), 25,25);
+//    QColor blue("#0000CD");
+//    Qt::BrushStyle style = Qt::SolidPattern;
+//    QBrush brush(blue, style);
+//    painter.setBrush(brush);
+//    painter.setPen(Qt::NoPen);
+//    painter.drawRect(b.X(),b.Y(), 25,25);
+    QImage img(0, 0, QImage::Format_RGB32);
+    img.load("images/Tobikame.png");
+    QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),img2);
+
     painter.end();
 }

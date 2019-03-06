@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     Game& game = Game::Instance();
     this->setFixedSize(game.width(),game.height());
     Notifer::Instance().Subscribe(this);
-    QPixmap bkgnd("images/back.jpg");
+    QPixmap bkgnd("images/back.png");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
