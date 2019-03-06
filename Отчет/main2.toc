@@ -7,22 +7,22 @@
 \contentsline {subsection}{\numberline {1.4}Результаты тестирования}{8}{subsection.1.4}
 \contentsline {section}{Приложение А}{9}{section*.6}
 \contentsline {subsection}{Game.h}{9}{section*.7}
-\contentsline {subsection}{GameItem.h}{12}{lstnumber.-1.190}
-\contentsline {subsection}{Bee.h}{13}{lstnumber.-2.75}
-\contentsline {subsection}{Cloud.h}{14}{lstnumber.-3.49}
-\contentsline {subsection}{FlyingObj.h}{15}{lstnumber.-4.18}
+\contentsline {subsection}{GameItem.h}{12}{lstnumber.-1.194}
+\contentsline {subsection}{Bee.h}{13}{lstnumber.-2.64}
+\contentsline {subsection}{Cloud.h}{14}{lstnumber.-3.46}
+\contentsline {subsection}{FlyingObj.h}{14}{lstnumber.-4.18}
 \contentsline {subsection}{Bell.h}{15}{lstnumber.-5.21}
-\contentsline {subsection}{Bulletgen.h}{16}{lstnumber.-6.35}
+\contentsline {subsection}{Bulletgen.h}{15}{lstnumber.-6.35}
 \contentsline {subsection}{Enemy.h}{16}{lstnumber.-7.38}
 \contentsline {subsection}{Initialization.h}{19}{lstnumber.-8.137}
 \contentsline {subsection}{MainWindow.h}{21}{lstnumber.-9.125}
-\contentsline {subsection}{Observer.h}{22}{lstnumber.-10.28}
-\contentsline {subsection}{GameItem.cpp}{23}{lstnumber.-11.56}
-\contentsline {subsection}{Bee.cpp}{24}{lstnumber.-12.79}
+\contentsline {subsection}{Observer.h}{21}{lstnumber.-10.29}
+\contentsline {subsection}{GameItem.cpp}{22}{lstnumber.-11.55}
+\contentsline {subsection}{Bee.cpp}{24}{lstnumber.-12.75}
 \contentsline {subsection}{Bell.cpp}{24}{lstnumber.-13.18}
 \contentsline {subsection}{Cloud.cpp}{25}{lstnumber.-14.25}
-\contentsline {subsection}{Flyingobj.cpp}{26}{lstnumber.-15.38}
+\contentsline {subsection}{Flyingobj.cpp}{25}{lstnumber.-15.38}
 \contentsline {subsection}{Observer.cpp}{26}{lstnumber.-16.22}
-\contentsline {subsection}{main.cpp}{27}{lstnumber.-17.36}
-\contentsline {subsection}{MainWindow.cpp}{27}{lstnumber.-18.28}
-\contentsline {subsection}{Settings.ini}{29}{lstnumber.-19.93}
+\contentsline {subsection}{main.cpp}{26}{lstnumber.-17.36}
+\contentsline {subsection}{MainWindow.cpp}{27}{lstnumber.-18.25}
+\contentsline {subsection}{Settings.ini}{29}{lstnumber.-19.94}

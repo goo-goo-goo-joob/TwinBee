@@ -22,6 +22,7 @@ public:
 private:
     Ui::MainWindow *ui;
     int shootID = 0;
+    QSet<Qt::Key> keysPressed;
 public slots:
     void keyReleaseEvent(QKeyEvent*);
     void keyPressEvent(QKeyEvent*);

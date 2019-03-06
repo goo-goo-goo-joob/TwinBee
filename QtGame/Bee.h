@@ -24,13 +24,12 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
-        sizeX = 25;
-        sizeY = 25;
+        sizeX = 50;
+        sizeY = 60;
         right= false;
         left= false;
         up= false;
         down= false;
-        //_notifer->Subscribe(this);
     }
     int SizeX(){
         return sizeX;
@@ -38,9 +37,7 @@ public:
     int SizeY(){
         return sizeY;
     }
-    ~Bee(){
-        //_notifer->Unsubscribe(this);
-    }
+    ~Bee(){}
     void access(Visitor &v) override {
         v.visit(*this);
       }

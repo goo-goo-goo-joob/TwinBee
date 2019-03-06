@@ -34,7 +34,7 @@ class Game : public Observer
     ~Game(){
         Initialization& ini = Initialization::Instance();
         ini.Save("setgame", "level", 1);
-        ini.Save("setgame", "score", _score);
+        ini.Save("setgame", "score", 0/*_score*/);
         ini.Save("logs", "no logs", 1);
         delete bee;
         for (auto it = items.begin(); it != items.end(); it++) {
@@ -50,6 +50,11 @@ class Game : public Observer
         for (auto it = bulls.begin(); it != bulls.end(); it++) {
             delete *it;
             bulls.erase(it);
+            it--;
+        }
+        for (auto it = bells.begin(); it != bells.end(); it++) {
+            delete *it;
+            bells.erase(it);
             it--;
         }
     }
@@ -68,7 +73,7 @@ public:
     void Collide(){
         for (auto b: bulls){
             for (auto i: enemes){
-                if (b->X() > i->e->X() /*+ 25*/ && b->X() + 10 < i->e->X() + 25 &&
+                if (b->X() > i->e->X() && b->X() + 10 < i->e->X() + 25 &&
                         b->Y() < i->e->Y() + 25 && b->Y() + 10 > i->e->Y()){
                     i->e->_play = false;
                     b->_play = false;
@@ -78,11 +83,10 @@ public:
         }
         for (auto b: bulls){
             for (auto i: items){
-                if (b->X() > i->X() /*+ 25*/ && b->X() + 10 < i->X() + 50 &&
+                if (b->X() > i->X() && b->X() + 10 < i->X() + 50 &&
                         b->Y() < i->Y() + 30 && b->Y() + 10 > i->Y()){
                     if(i->haveBell){
                         i->haveBell = false;
-                        //_score += i->score();
                         bells.push_back(new Bell(i->X() + 15, i->Y()));
                     }
                     b->_play = false;
@@ -91,7 +95,7 @@ public:
         }
         for (auto b: bulls){
             for (auto i: bells){
-                if (b->X() > i->X() /*+ 25*/ && b->X() + 10 < i->X() + 15 &&
+                if (b->X() > i->X() && b->X() + 10 < i->X() + 15 &&
                         b->Y() < i->Y() + 15 && b->Y() + 10 > i->Y()){
                     i->moveType = 1;
                     i->start = Notifer::Instance().getStage();
@@ -100,7 +104,7 @@ public:
             }
         }
         for (auto i: bells){
-            if (i->X() > bee->X() /*+ 25*/ && i->X() + 15 < bee->X() + 25 &&
+            if (i->X() > bee->X() && i->X() + 15 < bee->X() + 25 &&
                     i->Y() < bee->Y() + 25 && i->Y() + 15 > bee->Y()){
                 _score += i->score();
                 i->_play = false;
@@ -132,7 +136,7 @@ public:
             }
         }
         for (auto it = enemes.begin(); it != enemes.end(); it++) {
-            if (!(*it)->e->isIn() || !(*it)->e->_play){//((*it)->army)->isIn())
+            if (!(*it)->e->isIn() || !(*it)->e->_play){
                 delete *it;
                 enemes.erase(it);
                 it--;

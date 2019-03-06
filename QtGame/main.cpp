@@ -20,9 +20,9 @@ int main(int argc, char *argv[])
     ini.Init("settings.ini");
     Game& game = Game::Instance();
     MainWindow w;
+//    w.setStyleSheet("background-image: url(images/Bee.png); "
+//                                "background-position: top left; "
+//                                "background-repeat: repeat-xy;");
     w.show();
-//    ini.Save("setgame", "level", 1);
-//    ini.Save("setgame", "score", game.score());
-//    ini.Save("logs", "no logs", 1);
     return a.exec();
 }

@@ -39,6 +39,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     settings.ini \
+    ../../build-QtGame-Desktop-Debug/debug/settings.ini \
     ../../build-QtGame-Desktop-Debug/debug/settings.ini
 
 HEADERS += \
@@ -56,3 +57,5 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui
+	
+DESTDIR     =   $$PWD

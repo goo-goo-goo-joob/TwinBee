@@ -20,8 +20,7 @@ public:
         update();
     }
 private:
-    Ui::MainWindow *ui;
-    int shootID = 0;
+	Ui::MainWindow *ui;
 public slots:
     void keyReleaseEvent(QKeyEvent*);
     void keyPressEvent(QKeyEvent*);

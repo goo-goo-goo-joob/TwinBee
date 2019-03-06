@@ -18,11 +18,11 @@ public:
         v.visit(*this);
     }
     void Move(const Notifer& n){
-        _x += 0.05 * (n.getStage() - start) * cos(1.5);
-        _y -= 0.05 * (n.getStage() - start) * sin(1.5) - 0.001 * (n.getStage() - start)*(n.getStage() - start);
+        _x += 0.2 * (n.getStage() - start) * cos(1.5);
+        _y -= (0.06 * (n.getStage() - start) * sin(1.5) - 0.001 * (n.getStage() - start)*(n.getStage() - start));
     }
     void Move1(const Notifer& n){
-        _y -= 0.05 * (n.getStage() - start) - 0.001 * (n.getStage() - start)*(n.getStage() - start);
+        _y -= (0.06 * (n.getStage() - start) - 0.001 * (n.getStage() - start)*(n.getStage() - start));
     }
     void Update(const Notifer& n) override{
         if (!moveType)

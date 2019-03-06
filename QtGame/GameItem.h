@@ -62,14 +62,3 @@ public:
     void visit(RedEnemy &r) override;
     void visit(BlueEnemy &b) override;
 };
-
-//concrete visitor
-//class MoveGameItems:
-//        public Visitor{
-//public:
-//    void visit(Bee &b)override;
-//    void visit(Cloud &c) override{}
-//    void visit(FlyingObj &f) override{}
-//    void visit(RedEnemy &r) override{}
-//    void visit(BlueEnemy &b) override{}
-//};

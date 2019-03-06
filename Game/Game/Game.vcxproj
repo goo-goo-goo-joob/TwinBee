@@ -152,6 +152,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Bee.h" />
+    <ClInclude Include="bell.h" />
+    <ClInclude Include="bulletgen.h" />
     <ClInclude Include="Cloud.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="flyingobj.h" />
@@ -159,6 +161,7 @@
     <ClInclude Include="GameItem.h" />
     <ClInclude Include="initialization.h" />
     <ClInclude Include="mainwindow.h" />
+    <ClInclude Include="observer.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +171,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameItem.cpp" />
+    <ClCompile Include="observer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

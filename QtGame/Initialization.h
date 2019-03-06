@@ -9,7 +9,7 @@ using namespace std;
 
 class Initialization
 {
-    QString _path;
+    QString _path="";
     QMap<QString, QString> map;
     Initialization(){}
     ~Initialization(){}
@@ -107,8 +107,9 @@ public:
     }
     void Init(QString p)
     {
-        _path = QCoreApplication:: applicationDirPath();
-        _path.append("/" + p);
+//        _path = QCoreApplication:: applicationDirPath();
+//        _path.append("/" + p);
+        _path.append(p);
         QSettings sett(_path, QSettings::IniFormat);
         QFile file(_path);
         if ((file.open(QIODevice::ReadOnly)))

@@ -10,23 +10,32 @@ GameItem::~GameItem(){}
 
 void DrawGameItems::visit(Bee &b){
     QPainter painter(e);
-    QColor yellow("#f0d048");
-    Qt::BrushStyle style = Qt::SolidPattern;
-    QBrush brush(yellow, style);
-    painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
-    painter.drawEllipse(b.X(),b.Y(), b.SizeX(),b.SizeY());
+//    QColor yellow("#f0d048");
+//    Qt::BrushStyle style = Qt::SolidPattern;
+//    QBrush brush(yellow, style);
+//    painter.setBrush(brush);
+//    painter.setPen(Qt::NoPen);
+//    painter.drawEllipse(b.X(),b.Y(), b.SizeX(),b.SizeY());
+    QImage img(25, 25, QImage::Format_RGB32);
+    img.load("images/Bee1.png");
+    QImage img2 = img.scaled(50, 50, Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),img2);
     painter.end();
 }
 
 void DrawGameItems::visit(Cloud &c){
     QPainter painter(e);
-    QColor gray("#87CEFA");
-    Qt::BrushStyle style = Qt::SolidPattern;
-    QBrush brush(gray, style);
-    painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
-    painter.drawEllipse(c.X(),c.Y(), 50,30);
+//    QColor gray("#87CEFA");
+//    Qt::BrushStyle style = Qt::SolidPattern;
+//    QBrush brush(gray, style);
+//    painter.setBrush(brush);
+//    painter.setPen(Qt::NoPen);
+//    painter.drawEllipse(c.X(),c.Y(), 50,30);
+    QImage img(0, 0, QImage::Format_RGB32);
+    img.load("images/cloud.jpg");
+    QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
+    painter.drawImage(c.X(),c.Y(),img2);
+
     painter.end();
 }
 
@@ -51,10 +60,6 @@ void DrawGameItems::visit(Bell &b){
     painter.drawEllipse(b.X(),b.Y(), 15,15);
     painter.end();
 }
-
-//void MoveGameItems::visit(Bee &b) {
-//    b.x(b.x() + b.speed());
-//}
 
 void DrawGameItems::visit(RedEnemy &r){
     QPainter painter(e);

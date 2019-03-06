@@ -16,7 +16,6 @@ class Observer
 {
 public:
     virtual void Update(const Notifer&) = 0;
-    //virtual ~Observer() = 0;
 };
 
 //observable object
