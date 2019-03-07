@@ -29,6 +29,8 @@ class GameItem: public Observer
 {
 protected:
     int _x, _y, _speed;
+    int sizeX;
+    int sizeY;
 public:
     bool _play;
     GameItem(){
@@ -36,6 +38,8 @@ public:
         _x = 0;
         _y = 0;
         _speed = 0;
+        sizeX = 0;
+        sizeY = 0;
     }
     virtual void access(Visitor &v) = 0;
     virtual ~GameItem() = 0;
@@ -46,6 +50,12 @@ public:
     int speed() {return _speed;}
     void X( int x ){ _x = x;}
     void Y( int y ){ _y = y;}
+    int SizeX(){
+        return sizeX;
+    }
+    int SizeY(){
+        return sizeY;
+    }
 };
 
 //concrete visitor

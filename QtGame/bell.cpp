@@ -14,6 +14,8 @@ Bell::Bell(int x, int y){
     }
     _x = x;
     _y = y;
+    sizeX = 30;
+    sizeY = 33;
     Notifer::Instance().Subscribe(this);
     start = Notifer::Instance().getStage();
     moveType = 0;

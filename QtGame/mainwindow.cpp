@@ -17,12 +17,27 @@ MainWindow::MainWindow(QWidget *parent) :
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);
-//    this->centralWidget()->setStyleSheet(
-//             "background-image:url(\"images/Bee.png\"); background-position: center;" );
-//    this->setStyleSheet("background-image: url(images/Bee.png); "
-//                                    "background-position: top left; "
-//                                    "background-repeat: repeat-xy;");
-      shootID = 0;
+    QFont f( "Arial", 15, QFont::Bold);
+
+    score = new QLabel(this);
+    score->setFrameStyle(QFrame::Sunken);
+    score->setGeometry(QRect(10,30,200,20));
+    score->setStyleSheet("QLabel {color : white; }");
+    score->setFont( f);
+    lifes = new QLabel(this);
+    lifes->setFrameStyle(QFrame::Sunken);
+    lifes->setGeometry(QRect(10,10,200,20));
+    lifes->setStyleSheet("QLabel {color : white; }");
+    lifes->setFont( f);
+
+    QFont f1( "Arial", 30, QFont::Bold);
+    over = new QLabel(this);
+    over->setFrameStyle(QFrame::Sunken);
+    over->setGeometry(QRect(game.width()*0.36,game.height()/2,220,30));
+    over->setStyleSheet("QLabel {color : white; }");
+    over->setFont( f1);
+
+    shootID = 0;
 }
 
 MainWindow::~MainWindow()

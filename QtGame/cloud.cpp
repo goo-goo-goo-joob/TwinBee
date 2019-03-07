@@ -7,6 +7,8 @@ Cloud::Cloud(){
     if (_speed < 0){
         _speed = 0;
     }
+    sizeX = 90;
+    sizeY = 50;
     int x = ini.Sett("setgame/width", 900);
     if (x < 0){
         x = 900;

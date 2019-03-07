@@ -8,7 +8,6 @@ class Enemy :
 {
 protected:
     int _score;
-    int _speed;
 public:
     Enemy() {
         Initialization& ini = Initialization::Instance();
@@ -21,7 +20,8 @@ public:
             _y = 0;
         }
         _score = 0;
-        _speed = 0;
+        sizeX = 60;
+        sizeY = 60;
     }
     void Update(const Notifer& n) override{}
     int score() const { return _score; }
@@ -41,6 +41,8 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
+        sizeX = 53;
+        sizeY = 50;
         Notifer::Instance().Subscribe(this);
     }
     ~RedEnemy() override {
@@ -72,6 +74,8 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
+        sizeX = 43;
+        sizeY = 50;
         Notifer::Instance().Subscribe(this);
     }
     ~BlueEnemy() override {

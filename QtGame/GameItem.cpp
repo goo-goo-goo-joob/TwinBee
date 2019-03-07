@@ -3,7 +3,7 @@
 
 bool GameItem::isIn(){
     Game& game = Game::Instance();
-    return (0 < _x && _x < game.width() && 0 <_y && _y <game.height() );
+    return (0 < _x || _x - sizeX < game.width() || 0 <_y || _y - sizeY < game.height() );
 }
 
 GameItem::~GameItem(){}
@@ -16,10 +16,10 @@ void DrawGameItems::visit(Bee &b){
 //    painter.setBrush(brush);
 //    painter.setPen(Qt::NoPen);
 //    painter.drawEllipse(b.X(),b.Y(), b.SizeX(),b.SizeY());
-    QImage img(25, 25, QImage::Format_RGB32);
+    QImage img;
     img.load("images/Bee.png");
-    QImage img2 = img.scaled(50, 50, Qt::KeepAspectRatio);
-    painter.drawImage(b.X(),b.Y(),img2);
+    img = img.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),img);
     painter.end();
 }
 
@@ -31,10 +31,10 @@ void DrawGameItems::visit(Cloud &c){
 //    painter.setBrush(brush);
 //    painter.setPen(Qt::NoPen);
 //    painter.drawEllipse(c.X(),c.Y(), 50,30);
-    QImage img(0, 0, QImage::Format_RGB32);
+    QImage img;
     img.load("images/cloud.png");
-    QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
-    painter.drawImage(c.X(),c.Y(),img2);
+    img = img.scaled(c.SizeX(), c.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(c.X(),c.Y(),img);
 
     painter.end();
 }
@@ -58,22 +58,26 @@ void DrawGameItems::visit(Bell &b){
 //    painter.setBrush(brush);
 //    painter.setPen(Qt::NoPen);
 //    painter.drawEllipse(b.X(),b.Y(), 15,15);
-    QImage img(0, 0, QImage::Format_RGB32);
+    QImage img;
     img.load("images/bell.png");
-    QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
-    painter.drawImage(b.X(),b.Y(),img2);
+    img = img.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),img);
 
     painter.end();
 }
 
 void DrawGameItems::visit(RedEnemy &r){
     QPainter painter(e);
-    QColor red("#ff00ff");
-    Qt::BrushStyle style = Qt::SolidPattern;
-    QBrush brush(red, style);
-    painter.setBrush(brush);
-    painter.setPen(Qt::NoPen);
-    painter.drawRect(r.X(),r.Y(), 25,25);
+//    QColor red("#ff00ff");
+//    Qt::BrushStyle style = Qt::SolidPattern;
+//    QBrush brush(red, style);
+//    painter.setBrush(brush);
+//    painter.setPen(Qt::NoPen);
+//    painter.drawRect(r.X(),r.Y(), 25,25);
+    QImage img;
+    img.load("images/Putan.png");
+    img = img.scaled(r.SizeX(), r.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(r.X(),r.Y(),img);
     painter.end();
 }
 
@@ -85,10 +89,10 @@ void DrawGameItems::visit(BlueEnemy &b){
 //    painter.setBrush(brush);
 //    painter.setPen(Qt::NoPen);
 //    painter.drawRect(b.X(),b.Y(), 25,25);
-    QImage img(0, 0, QImage::Format_RGB32);
+    QImage img;
     img.load("images/Tobikame.png");
-    QImage img2 = img.scaled(100, 50, Qt::KeepAspectRatio);
-    painter.drawImage(b.X(),b.Y(),img2);
+    img = img.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),img);
 
     painter.end();
 }

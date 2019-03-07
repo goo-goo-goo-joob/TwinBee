@@ -70,11 +70,11 @@ public:
     QVector<Cloud*> items;
     QVector<Client*> enemes;
     QVector<Bell*> bells;
-    void Collide(){
+    void Collide(const Notifer& n){
         for (auto b: bulls){
             for (auto i: enemes){
-                if (b->X() > i->e->X() && b->X() + 10 < i->e->X() + 25 &&
-                        b->Y() < i->e->Y() + 25 && b->Y() + 10 > i->e->Y()){
+                if (b->X() > i->e->X() && b->X() + b->SizeX() < i->e->X() + i->e->SizeX() &&
+                        b->Y() < i->e->Y() + i->e->SizeY() && b->Y() + b->SizeY() > i->e->Y()){
                     i->e->_play = false;
                     b->_play = false;
                     _score += i->e->score();
@@ -83,11 +83,11 @@ public:
         }
         for (auto b: bulls){
             for (auto i: items){
-                if (b->X() > i->X() && b->X() + 10 < i->X() + 50 &&
-                        b->Y() < i->Y() + 30 && b->Y() + 10 > i->Y()){
+                if (b->X() > i->X() && b->X() + b->SizeX() < i->X() + i->SizeX() &&
+                        b->Y() < i->Y() + i->SizeY() && b->Y() + b->SizeY() > i->Y()){
                     if(i->haveBell){
                         i->haveBell = false;
-                        bells.push_back(new Bell(i->X() + 15, i->Y()));
+                        bells.push_back(new Bell(b->X() + b->SizeX()/2, i->Y()));
                     }
                     b->_play = false;
                 }
@@ -95,8 +95,8 @@ public:
         }
         for (auto b: bulls){
             for (auto i: bells){
-                if (b->X() > i->X() && b->X() + 10 < i->X() + 15 &&
-                        b->Y() < i->Y() + 15 && b->Y() + 10 > i->Y()){
+                if (b->X() > i->X() && b->X() + b->SizeX() < i->X() + i->SizeY() &&
+                        b->Y() < i->Y() + i->SizeY() && b->Y() + b->SizeY() > i->Y()){
                     i->moveType = 1;
                     i->start = Notifer::Instance().getStage();
                     b->_play = false;
@@ -104,15 +104,21 @@ public:
             }
         }
         for (auto i: bells){
-            if (i->X() > bee->X() && i->X() + 15 < bee->X() + 25 &&
-                    i->Y() < bee->Y() + 25 && i->Y() + 15 > bee->Y()){
+            if (i->X() + i->SizeX()/2 > bee->X() && i->X() + i->SizeX()/2 < bee->X() + bee->SizeX() &&
+                    i->Y() + i->SizeY()/2 > bee->Y() && i->Y() + i->SizeY()/2 < bee->Y() + bee->SizeY()){
                 _score += i->score();
                 i->_play = false;
             }
         }
+        for (auto i: enemes){
+            if (i->e->X() + i->e->SizeX()/2 > bee->X() && i->e->X() + i->e->SizeX()/2 < bee->X() + bee->SizeX() &&
+                    i->e->Y() + i->e->SizeY()/2 > bee->Y() && i->e->Y() + i->e->SizeY()/2 < bee->Y() + bee->SizeY()){
+                bee->Update(n);
+            }
+        }
     }
     void Update(const Notifer& n) {
-        Collide();
+        Collide(n);
     }
     void setLevel1(){
         bee = new Bee();

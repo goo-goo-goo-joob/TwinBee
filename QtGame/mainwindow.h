@@ -5,6 +5,7 @@
 #include "observer.h"
 #include "Game.h"
 #include "bulletgen.h"
+#include <QLabel>
 
 namespace Ui {
 class MainWindow;
@@ -20,21 +21,30 @@ public:
     void paintEvent(QPaintEvent *event);
     void Update(const Notifer& n) {
         Game& game = Game::Instance();
-        game.bee->up = keysPressed.contains(Qt::Key_Up);
-        game.bee->right = keysPressed.contains(Qt::Key_Right);
-        game.bee->left = keysPressed.contains(Qt::Key_Left);
-        game.bee->down = keysPressed.contains(Qt::Key_Down);
+        if(game.play()){
+            game.bee->up = keysPressed.contains(Qt::Key_Up);
+            game.bee->right = keysPressed.contains(Qt::Key_Right);
+            game.bee->left = keysPressed.contains(Qt::Key_Left);
+            game.bee->down = keysPressed.contains(Qt::Key_Down);
 
-         BulletGen& gen = BulletGen::Instance();
-         gen.on = keysPressed.contains(Qt::Key_Space);
-         gen.Update(Notifer::Instance());
+            BulletGen& gen = BulletGen::Instance();
+            gen.on = keysPressed.contains(Qt::Key_Space);
+            gen.Update(Notifer::Instance());
 
-        game.bee->Move();
-
+            game.bee->Move();
+        }
+        else{
+            over -> setText(QString("Game over"));
+        }
+        score -> setText(QString("Score: %1").arg(game.score()));
+        lifes -> setText(QString("Lifes: %1").arg(game.bee->Lifes() ));
         update();
     }
 private:
     Ui::MainWindow *ui;
+    QLabel *score;
+    QLabel *lifes;
+    QLabel *over;
     int shootID = 0;
     QSet<int> keysPressed;
 public slots:
