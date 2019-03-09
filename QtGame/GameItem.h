@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QMainWindow>
 #include "observer.h"
+#include <QMutex>
 
 class Bee;
 class Cloud;
@@ -31,6 +32,7 @@ protected:
     int _x, _y, _speed;
     int sizeX;
     int sizeY;
+    QMutex mutex;
 public:
     bool _play;
     GameItem(){
@@ -45,11 +47,29 @@ public:
     virtual ~GameItem() = 0;
     //virtual void Move() = 0;
     bool isIn();
-    int X(){ return _x;}
-    int Y(){ return _y;}
+    int X(){
+        mutex.lock();
+        auto temp = _x;
+        mutex.unlock();
+        return temp;
+    }
+    int Y(){
+        mutex.lock();
+        auto temp = _y;
+        mutex.unlock();
+        return temp;
+    }
     int speed() {return _speed;}
-    void X( int x ){ _x = x;}
-    void Y( int y ){ _y = y;}
+    void X( int x ){
+        mutex.lock();
+        _x = x;
+        mutex.unlock();
+    }
+    void Y( int y ){
+        mutex.lock();
+        _y = y;
+        mutex.unlock();
+    }
     int SizeX(){
         return sizeX;
     }

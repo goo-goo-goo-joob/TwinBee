@@ -5,10 +5,25 @@
 #include "Bell.h"
 #include "flyingobj.h"
 #include "initialization.h"
-
-
-class Game : public Observer
+#include <QThread>
+#include <QMetaType>
+class Game;
+class Worker : public QObject
 {
+    Q_OBJECT
+    QThread workerThread;
+
+public slots:
+    void doWork();
+
+signals:
+    void resultReady();
+};
+
+class Game : public QObject, public Observer
+{
+    Q_OBJECT
+    QThread workerThread;
     Game(){
         Initialization& ini = Initialization::Instance();
         _level = ini.Sett("setgame/level", 1);
@@ -30,6 +45,14 @@ class Game : public Observer
         }
         setLevel1();
         Notifer::Instance().Subscribe(this);
+
+
+        Worker *worker = new Worker;
+        worker->moveToThread(&workerThread);
+        connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        connect(this, SIGNAL(operate()), worker, SLOT(doWork()));
+        connect(worker, SIGNAL(resultReady()), this, SLOT(handleResults()));
+        workerThread.start();
     }
     ~Game(){
         Initialization& ini = Initialization::Instance();
@@ -58,6 +81,8 @@ class Game : public Observer
             bells.erase(it);
             it--;
         }
+        workerThread.quit();
+        workerThread.wait();
     }
     Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
@@ -65,6 +90,15 @@ class Game : public Observer
     int _score;
     bool _play;
     int _level;
+
+public slots:
+    void handleResults()
+    {
+
+    }
+signals:
+    void operate();
+
 public:
     Bee *bee;
     QVector<FlyingObj*> bulls;
@@ -72,51 +106,7 @@ public:
     QVector<Client*> enemes;
     QVector<Bell*> bells;
     void Collide(const Notifer& n){
-        for (auto b: bulls){
-            for (auto i: enemes){
-                if (b->X() > i->e->X() && b->X() + b->SizeX() < i->e->X() + i->e->SizeX() &&
-                        b->Y() < i->e->Y() + i->e->SizeY() && b->Y() + b->SizeY() > i->e->Y()){
-                    i->e->_play = false;
-                    b->_play = false;
-                    _score += i->e->score();
-                }
-            }
-        }
-        for (auto b: bulls){
-            for (auto i: items){
-                if (b->X() > i->X() && b->X() + b->SizeX() < i->X() + i->SizeX() &&
-                        b->Y() < i->Y() + i->SizeY() && b->Y() + b->SizeY() > i->Y()){
-                    if(i->haveBell){
-                        i->haveBell = false;
-                        bells.push_back(new Bell(b->X() + b->SizeX()/2, i->Y()));
-                    }
-                    b->_play = false;
-                }
-            }
-        }
-        for (auto b: bulls){
-            for (auto i: bells){
-                if (b->X() > i->X() && b->X() + b->SizeX() < i->X() + i->SizeY() &&
-                        b->Y() < i->Y() + i->SizeY() && b->Y() + b->SizeY() > i->Y()){
-                    i->moveType = 1;
-                    i->start = Notifer::Instance().getStage();
-                    b->_play = false;
-                }
-            }
-        }
-        for (auto i: bells){
-            if (i->X() + i->SizeX()/2 > bee->X() && i->X() + i->SizeX()/2 < bee->X() + bee->SizeX() &&
-                    i->Y() + i->SizeY()/2 > bee->Y() && i->Y() + i->SizeY()/2 < bee->Y() + bee->SizeY()){
-                _score += i->score();
-                i->_play = false;
-            }
-        }
-        for (auto i: enemes){
-            if (i->e->X() + i->e->SizeX()/2 > bee->X() && i->e->X() + i->e->SizeX()/2 < bee->X() + bee->SizeX() &&
-                    i->e->Y() + i->e->SizeY()/2 > bee->Y() && i->e->Y() + i->e->SizeY()/2 < bee->Y() + bee->SizeY()){
-                bee->Update(n);
-            }
-        }
+        operate();
     }
     void Update(const Notifer& n) {
         Collide(n);
