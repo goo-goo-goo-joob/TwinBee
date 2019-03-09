@@ -30,8 +30,7 @@ SOURCES += \
     observer.cpp \
     bee.cpp \
     flyingobj.cpp \
-    bell.cpp \
-    loadwindow.cpp
+    bell.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -54,11 +53,9 @@ HEADERS += \
     mainwindow.h \
     observer.h \
     bulletgen.h \
-    bell.h \
-    loadwindow.h
+    bell.h
 
 FORMS += \
-    mainwindow.ui \
-    loadwindow.ui
+    mainwindow.ui
 	
 DESTDIR     =   $$PWD

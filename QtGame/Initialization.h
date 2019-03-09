@@ -9,11 +9,13 @@ using namespace std;
 
 class Initialization
 {
+    const QString _path_saved = "settings_saved.ini";
     QString _path="";
     QMap<QString, QString> map;
     Initialization(){}
     ~Initialization(){}
 public:
+
     static Initialization& Instance()
     {
         static Initialization i;
@@ -27,8 +29,9 @@ public:
     }
     void Save(const QString &section,
               const QString &variable, int value){
-        QSettings sett(_path, QSettings::IniFormat);
-        QFile file(_path);
+
+        QSettings sett(_path_saved, QSettings::IniFormat);
+        QFile file(_path_saved);
         if ((file.open(QIODevice::ReadWrite)))
         {
             QString line;

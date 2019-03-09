@@ -6,6 +6,7 @@
 #include "observer.h"
 
 
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -55,6 +56,9 @@ MainWindow::MainWindow(QWidget *parent) :
     HelpMenu = menuBar()->addMenu(tr("&Game"));
     HelpMenu->addAction(SaveAct);
     shootID = 0;
+
+
+
 }
 
 MainWindow::~MainWindow()

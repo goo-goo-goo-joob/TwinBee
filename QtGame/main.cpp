@@ -10,6 +10,7 @@
 #include <QApplication>
 #include "Initialization.h"
 #include <ctime>
+#include <QMessageBox>
 
 class QPaintEvent;
 using namespace std;
@@ -20,14 +21,26 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     srand((unsigned int)time(NULL));//helps to generate random coords of objects
-    QDialog *dialog = new QDialog;
-    dialog->setWindowTitle("Set game");
-    QPushButton *button = new QPushButton("New game", dialog);
-    dialog->connect(button, SIGNAL(clicked()), this, SLOT(show()));
-    dialog->show();
 
     Initialization& ini = Initialization::Instance();
-    ini.Init("settings.ini");
+
+    QString saved = "settings_saved.ini";
+    if (QFile::exists(saved)){
+
+        QMessageBox msgBox;
+        msgBox.setText("Load saved game?");
+        msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        if (msgBox.exec() == QMessageBox::Ok){
+            ini.Init("settings_saved.ini");;
+        }else{
+            ini.Init("settings.ini");
+        }
+    }
+    else {
+        ini.Init("settings.ini");
+    }
+
     Game& game = Game::Instance();
     MainWindow w;
     w.show();
