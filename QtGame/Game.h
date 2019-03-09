@@ -92,10 +92,7 @@ class Game : public QObject, public Observer
     int _level;
 
 public slots:
-    void handleResults()
-    {
-
-    }
+    void handleResults() {}
 signals:
     void operate();
 
@@ -110,6 +107,9 @@ public:
     }
     void Update(const Notifer& n) {
         Collide(n);
+        if (n.getStage() % (7 * n.getPeriod()) == 0){
+            items.push_back(static_cast<Cloud*>(new Cloud));
+        }
     }
     void setLevel1(){
         bee = new Bee();

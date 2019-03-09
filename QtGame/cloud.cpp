@@ -20,7 +20,7 @@ Cloud::Cloud(){
     }
     y /= 2;
     _x = rand()%x;
-    _y = rand()%y;
+    _y = sizeY/2;
     haveBell = true;
     Notifer::Instance().Subscribe(this);
 }

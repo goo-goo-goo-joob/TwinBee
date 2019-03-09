@@ -12,8 +12,8 @@ Bell::Bell(int x, int y){
     if (_score < 0){
         _score = 0;
     }
-    _x = x;
-    _y = y;
+    _x0 = _x = x;
+    _y0 = _y = y;
     sizeX = 30;
     sizeY = 33;
     Notifer::Instance().Subscribe(this);
