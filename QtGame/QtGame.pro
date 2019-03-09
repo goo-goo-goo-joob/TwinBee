@@ -30,7 +30,8 @@ SOURCES += \
     observer.cpp \
     bee.cpp \
     flyingobj.cpp \
-    bell.cpp
+    bell.cpp \
+    game.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
