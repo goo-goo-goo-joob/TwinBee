@@ -47,14 +47,7 @@ private:
     QLabel *over;
     int shootID = 0;
     QSet<int> keysPressed;
-    QMenu *HelpMenu;
-    QAction *AboutAct;
-    QAction *SaveAct;
-    //void createActions();
-    //void createMenus();
 public slots:
-    void About();
-    void Save();
     void keyReleaseEvent(QKeyEvent*);
     void keyPressEvent(QKeyEvent*);
 };

@@ -34,8 +34,7 @@ class Game : public Observer
     ~Game(){
         Initialization& ini = Initialization::Instance();
         ini.Save("setgame", "level", 1);
-        ini.Save("setgame", "score", 0);
-        ini.Save("setgame", "lifes", 3);
+        ini.Save("setgame", "score", 0/*_score*/);
         ini.Save("logs", "no logs", 1);
         delete bee;
         for (auto it = items.begin(); it != items.end(); it++) {
@@ -133,13 +132,6 @@ public:
             items.push_back(item);
         }
         delete factory;
-    }
-    void Save(){
-        Initialization& ini = Initialization::Instance();
-        ini.Save("setgame", "level", _level);
-        ini.Save("setgame", "score", _score);
-        ini.Save("setgame", "lifes", bee->Lifes());
-        ini.Save("logs", "no logs", 1);
     }
     void Clear(){
         for (auto it = bulls.begin(); it != bulls.end(); it++) {

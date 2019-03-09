@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
-#include <QMenu>
-#include <QMenuBar>
+
 #include "observer.h"
 
 
@@ -14,23 +12,21 @@ MainWindow::MainWindow(QWidget *parent) :
     Game& game = Game::Instance();
     this->setFixedSize(game.width(),game.height());
     Notifer::Instance().Subscribe(this);
-
     QPixmap bkgnd("images/back.png");
     bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
     QPalette palette;
     palette.setBrush(QPalette::Background, bkgnd);
     this->setPalette(palette);
-
     QFont f( "Arial", 15, QFont::Bold);
 
     score = new QLabel(this);
     score->setFrameStyle(QFrame::Sunken);
-    score->setGeometry(QRect(10,45,200,20));
+    score->setGeometry(QRect(10,30,200,20));
     score->setStyleSheet("QLabel {color : white; }");
     score->setFont( f);
     lifes = new QLabel(this);
     lifes->setFrameStyle(QFrame::Sunken);
-    lifes->setGeometry(QRect(10,25,200,20));
+    lifes->setGeometry(QRect(10,10,200,20));
     lifes->setStyleSheet("QLabel {color : white; }");
     lifes->setFont( f);
 
@@ -41,19 +37,6 @@ MainWindow::MainWindow(QWidget *parent) :
     over->setStyleSheet("QLabel {color : white; }");
     over->setFont( f1);
 
-    AboutAct = new QAction(tr("&About"), this);
-    connect(AboutAct, SIGNAL(triggered()), this, SLOT(About()));
-
-    SaveAct = new QAction(tr("&Save"), this);
-    SaveAct->setShortcuts(QKeySequence::Save);
-    SaveAct->setStatusTip(tr("Save a game"));
-    connect(SaveAct, SIGNAL(triggered()), this, SLOT(Save()));
-
-    HelpMenu = new QMenu();
-    HelpMenu = menuBar()->addMenu(tr("&Help"));
-    HelpMenu->addAction(AboutAct);
-    HelpMenu = menuBar()->addMenu(tr("&Game"));
-    HelpMenu->addAction(SaveAct);
     shootID = 0;
 }
 
@@ -71,8 +54,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     Game& game = Game::Instance();
-    if(game.play())
-        game.Draw(this);
+    game.Draw(this);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent * event)
@@ -85,14 +67,4 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
 
     keysPressed.remove(event->key());
     return;
-}
-
-void MainWindow::About(){
-    QMessageBox::about(this, tr("About"),
-                       tr("The Game rules!\nSimply press on buttons"));
-}
-
-void MainWindow::Save(){
-    Game& game = Game::Instance();
-    game.Save();
 }
