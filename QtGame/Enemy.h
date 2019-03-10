@@ -11,7 +11,7 @@ protected:
 public:
     Enemy() {
         Initialization& ini = Initialization::Instance();
-        _x = ini.Sett("setcoord/enemy_x") +  + rand()%70;
+        _x = ini.Sett("setcoord/enemy_x") + rand()%70;
         if (_x < 0){
             _x = 0;
         }

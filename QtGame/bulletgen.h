@@ -6,7 +6,7 @@ class BulletGen{
 public:
     bool on;
 
-    static const int shootTime = 5;
+    static const int shootTime = 1;
     static BulletGen& Instance()
     {
         static BulletGen b;

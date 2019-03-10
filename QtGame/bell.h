@@ -17,7 +17,7 @@ public:
         Notifer::Instance().Unsubscribe(this);
     }
     void access(Visitor &v) override {
-        v.visit(*this);
+          v.visit(*this);
     }
     void Move(const Notifer& n){
         _x =  _x0 + 10.0 * (float)(n.getStage() - start) / (float)n.getPeriod();

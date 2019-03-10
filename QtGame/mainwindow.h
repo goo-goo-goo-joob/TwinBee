@@ -32,15 +32,37 @@ public:
             gen.Update(Notifer::Instance());
 
             game.bee->Move();
+            if (lastLevel != game.level()){
+                lastLevel = game.level();
+                lastLevelStartTime = n.getStage();
+                isShown = true;
+                over -> setText(QString("Level %1").arg(lastLevel));
+            }
+            else if(isShown && (n.getStage() - lastLevelStartTime) > (n.getPeriod() * 3)){
+                isShown = false;
+                over -> setText(QString(""));
+            }
         }
         else{
-            over -> setText(QString("Game over"));
+            //if (lastLevel != game.level()){
+                lastLevel = game.level();
+                lastLevelStartTime = n.getStage();
+                isShown = true;
+                over -> setText(QString("Game over"));
+            //}
+            //else if(isShown && (n.getStage() - lastLevelStartTime) > (n.getPeriod() * 3)){
+            //    isShown = false;
+            //    over -> setText(QString(""));
+            //}
         }
         score -> setText(QString("Score: %1").arg(game.score()));
         lifes -> setText(QString("Lifes: %1").arg(game.bee->Lifes() ));
         update();
     }
 private:
+    int lastLevel = -1;
+    int lastLevelStartTime = -1;
+    bool isShown = false;
     Ui::MainWindow *ui;
     QLabel *score;
     QLabel *lifes;

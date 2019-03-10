@@ -83,8 +83,19 @@ class DrawGameItems:
         public Visitor{
 private:
     QMainWindow *e;
+    QImage bee;
+    QImage cloud;
+    QImage bell;
+    QImage red;
+    QImage blue;
 public:
-    DrawGameItems(QMainWindow *event): e(event){}
+    DrawGameItems(QMainWindow *event): e(event){
+        bee.load("images/Bee.png");
+        cloud.load("images/cloud.png");
+        bell.load("images/bell.png");
+        red.load("images/Putan.png");
+        blue.load("images/Tobikame.png");
+    }
     void visit(Bee &b)override ;
     void visit(Cloud &c) override;
     void visit(FlyingObj &f) override;

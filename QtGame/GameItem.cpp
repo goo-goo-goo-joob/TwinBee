@@ -10,20 +10,15 @@ GameItem::~GameItem(){}
 
 void DrawGameItems::visit(Bee &b){
     QPainter painter(e);
-    QImage img;
-    img.load("images/Bee.png");
-    img = img.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
-    painter.drawImage(b.X(),b.Y(),img);
+    bee = bee.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(), bee);
     painter.end();
 }
 
 void DrawGameItems::visit(Cloud &c){
     QPainter painter(e);
-    QImage img;
-    img.load("images/cloud.png");
-    img = img.scaled(c.SizeX(), c.SizeY(), Qt::KeepAspectRatio);
-    painter.drawImage(c.X(),c.Y(),img);
-
+    cloud = cloud.scaled(c.SizeX(), c.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(c.X(),c.Y(),cloud);
     painter.end();
 }
 
@@ -40,28 +35,22 @@ void DrawGameItems::visit(FlyingObj &f){
 
 void DrawGameItems::visit(Bell &b){
     QPainter painter(e);
-    QImage img;
-    img.load("images/bell.png");
-    img = img.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
-    painter.drawImage(b.X(),b.Y(),img);
+    bell = bell.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),bell);
     painter.end();
 }
 
 void DrawGameItems::visit(RedEnemy &r){
     QPainter painter(e);
-    QImage img;
-    img.load("images/Putan.png");
-    img = img.scaled(r.SizeX(), r.SizeY(), Qt::KeepAspectRatio);
-    painter.drawImage(r.X(),r.Y(),img);
+    red = red.scaled(r.SizeX(), r.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(r.X(),r.Y(),red);
     painter.end();
 }
 
 void DrawGameItems::visit(BlueEnemy &b){
     QPainter painter(e);
-    QImage img;
-    img.load("images/Tobikame.png");
-    img = img.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
-    painter.drawImage(b.X(),b.Y(),img);
+    blue = blue.scaled(b.SizeX(), b.SizeY(), Qt::KeepAspectRatio);
+    painter.drawImage(b.X(),b.Y(),blue);
 
     painter.end();
 }

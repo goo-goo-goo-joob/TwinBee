@@ -7,6 +7,7 @@
 #include "initialization.h"
 #include <QThread>
 #include <QMetaType>
+#include <QQueue>
 class Game;
 class Worker : public QObject
 {
@@ -24,6 +25,8 @@ class Game : public QObject, public Observer
 {
     Q_OBJECT
     QThread workerThread;
+    int lastUpd;
+    int updTime;
     Game(){
         Initialization& ini = Initialization::Instance();
         _level = ini.Sett("setgame/level", 1);
@@ -43,6 +46,8 @@ class Game : public QObject, public Observer
         if (_score < 0){
             _score = 0;
         }
+        lastUpd = -1;
+        updTime = 80;
         setLevel1();
         Notifer::Instance().Subscribe(this);
 
@@ -102,18 +107,54 @@ public:
     QVector<Cloud*> items;
     QVector<Client*> enemes;
     QVector<Bell*> bells;
+    QQueue<QVector<int>> box;
     void Collide(const Notifer& n){
         operate();
+    }
+    void fromTheBox(){
+        Notifer &n = Notifer::Instance();
+        if(n.getStage() - lastUpd >= updTime){
+            lastUpd = n.getStage();
+            if(!box.isEmpty()){
+                QVector<int> tmp;
+                tmp = box.takeFirst();
+                switch (tmp[0]){
+                case 0:
+                {
+                    EnemyFactory *factory = new RedEnemyFactory;
+                    for (int i = 0; i < tmp[1]; i++) {
+                        Client* enemy = static_cast<Client*>(new Client(factory));
+                        enemes.push_back(enemy);
+                    }
+                    break;
+                }
+                case 1:
+                {
+                    EnemyFactory *factory = new BlueEnemyFactory;
+                    for (int i = 0; i < tmp[1]; i++) {
+                        Client* enemy = static_cast<Client*>(new Client(factory));
+                        enemes.push_back(enemy);
+                    }
+                    break;
+                }
+                }
+            }
+            else {
+                setLevel2();
+            }
+        }
     }
     void Update(const Notifer& n) {
         Collide(n);
         if (n.getStage() % (7 * n.getPeriod()) == 0){
             items.push_back(static_cast<Cloud*>(new Cloud));
         }
+        fromTheBox();
     }
     void setLevel1(){
+        _level = 1;
         bee = new Bee();
-        EnemyFactory *factory = new BlueEnemyFactory;
+        EnemyFactory *factory = new RedEnemyFactory;
         for (int i = 0; i < 3; i++) {
             Client* enemy = static_cast<Client*>(new Client(factory));
             enemes.push_back(enemy);
@@ -123,6 +164,37 @@ public:
             items.push_back(item);
         }
         delete factory;
+
+        QFile file("level1.txt");
+        if ((file.open(QIODevice::ReadOnly)))
+        {
+            while(!file.atEnd())
+            {
+                QVector<int> tmp;
+                QString s = file.readLine();
+                tmp.push_back(s.split(" ")[0].toInt());//type of enemy
+                tmp.push_back(s.split(" ")[1].toInt());//number of enemies
+                box.append(tmp);
+            }
+            file.close();
+        }
+    }
+    void setLevel2(){
+        _level = 2;
+
+        QFile file("level2.txt");
+        if ((file.open(QIODevice::ReadOnly)))
+        {
+            while(!file.atEnd())
+            {
+                QVector<int> tmp;
+                QString s = file.readLine();
+                tmp.push_back(s.split(" ")[0].toInt());//type of enemy
+                tmp.push_back(s.split(" ")[1].toInt());//number of enemies
+                box.append(tmp);
+            }
+            file.close();
+        }
     }
     void Save(){
         Initialization& ini = Initialization::Instance();
