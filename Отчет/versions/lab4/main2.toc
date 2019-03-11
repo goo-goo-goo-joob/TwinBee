@@ -1,0 +1,14 @@
+\babel@toc {russian}{}
+\contentsline {section}{Постановка задачи}{3}{section*.2}
+\contentsline {section}{\numberline {1}Основная часть}{4}{section.1}
+\contentsline {subsection}{\numberline {1.1}Общая идея решения задачи}{4}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Структура и принципы действия}{4}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Процедура получения исполняемых программных модулей}{7}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Результаты тестирования}{7}{subsection.1.4}
+\contentsline {section}{Приложение А}{8}{section*.6}
+\contentsline {subsection}{MainWindow.cpp}{8}{section*.7}
+\contentsline {subsection}{MainWindow.h}{8}{lstnumber.-1.33}
+\contentsline {subsection}{GameItem.cpp}{9}{lstnumber.-2.53}
+\contentsline {subsection}{Game.h}{10}{lstnumber.-3.67}
+\contentsline {subsection}{Bee.h}{14}{lstnumber.-4.200}
+\contentsline {subsection}{Bee.cpp}{15}{lstnumber.-5.53}

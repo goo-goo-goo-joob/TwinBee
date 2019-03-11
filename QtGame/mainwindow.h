@@ -21,7 +21,7 @@ public:
     void paintEvent(QPaintEvent *event);
     void Update(const Notifer& n) {
         Game& game = Game::Instance();
-        if(game.play()){
+        if(game.play() && game.bee->Lifes()){
             game.bee->up = keysPressed.contains(Qt::Key_Up);
             game.bee->right = keysPressed.contains(Qt::Key_Right);
             game.bee->left = keysPressed.contains(Qt::Key_Left);
@@ -49,6 +49,9 @@ public:
                 lastLevelStartTime = n.getStage();
                 isShown = true;
                 over -> setText(QString("Game over"));
+                game.score(0);
+                game.level(1);
+                game.Save();
             //}
             //else if(isShown && (n.getStage() - lastLevelStartTime) > (n.getPeriod() * 3)){
             //    isShown = false;
@@ -72,11 +75,13 @@ private:
     QMenu *HelpMenu;
     QAction *AboutAct;
     QAction *SaveAct;
+    QAction *NewAct;
     //void createActions();
     //void createMenus();
 public slots:
     void About();
     void Save();
+    void newGame();
     void keyReleaseEvent(QKeyEvent*);
     void keyPressEvent(QKeyEvent*);
 };

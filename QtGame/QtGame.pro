@@ -41,7 +41,10 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     settings.ini \
     ../../build-QtGame-Desktop-Debug/debug/settings.ini \
-    ../../build-QtGame-Desktop-Debug/debug/settings.ini
+    ../../build-QtGame-Desktop-Debug/debug/settings.ini \
+    settings_saved.ini \
+    level1.txt \
+    level2.txt
 
 HEADERS += \
     Bee.h \

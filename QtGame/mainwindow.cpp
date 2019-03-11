@@ -50,11 +50,17 @@ MainWindow::MainWindow(QWidget *parent) :
     SaveAct->setStatusTip(tr("Save a game"));
     connect(SaveAct, SIGNAL(triggered()), this, SLOT(Save()));
 
+    NewAct = new QAction(tr("&New game"), this);
+    NewAct->setShortcuts(QKeySequence::New);
+    NewAct->setStatusTip(tr("Set a new game"));
+    connect(NewAct, SIGNAL(triggered()), this, SLOT(newGame()));
+
     HelpMenu = new QMenu();
     HelpMenu = menuBar()->addMenu(tr("&Help"));
     HelpMenu->addAction(AboutAct);
     HelpMenu = menuBar()->addMenu(tr("&Game"));
     HelpMenu->addAction(SaveAct);
+    HelpMenu->addAction(NewAct);
     shootID = 0;
 
 
@@ -75,7 +81,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
     Game& game = Game::Instance();
-    if(game.play())
+    if(game.play() && game.bee->Lifes())
         game.Draw(this);
 }
 
@@ -99,4 +105,14 @@ void MainWindow::About(){
 void MainWindow::Save(){
     Game& game = Game::Instance();
     game.Save();
+}
+
+void MainWindow::newGame(){
+    Game& game = Game::Instance();
+    game.box.clear();
+    game.setLevel1();
+    game.score(0);
+    game.bee->Lifes(3);
+    game.play(true);
+    over -> setText(QString("Level 1"));
 }

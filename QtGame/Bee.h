@@ -50,4 +50,5 @@ public:
     }
     void SubLifes();
     int Lifes() {return _lifes;}
+    void Lifes(int lifes){_lifes = lifes;}
 };

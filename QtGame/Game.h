@@ -48,7 +48,11 @@ class Game : public QObject, public Observer
         }
         lastUpd = -1;
         updTime = 80;
-        setLevel1();
+        bee = new Bee();
+        if (_level == 2)
+            setLevel2();
+        else
+            setLevel1();
         Notifer::Instance().Subscribe(this);
 
 
@@ -60,11 +64,11 @@ class Game : public QObject, public Observer
         workerThread.start();
     }
     ~Game(){
-        Initialization& ini = Initialization::Instance();
-        ini.Save("setgame", "level", 1);
-        ini.Save("setgame", "score", 0);
-        ini.Save("setgame", "lifes", 3);
-        ini.Save("logs", "no logs", 1);
+//        Initialization& ini = Initialization::Instance();
+//        ini.Save("setgame", "level", 1);
+//        ini.Save("setgame", "score", 0);
+//        ini.Save("setgame", "lifes", 3);
+//        ini.Save("logs", "no logs", 1);
         delete bee;
         for (auto it = items.begin(); it != items.end(); it++) {
             delete *it;
@@ -153,7 +157,7 @@ public:
     }
     void setLevel1(){
         _level = 1;
-        bee = new Bee();
+
         EnemyFactory *factory = new RedEnemyFactory;
         for (int i = 0; i < 3; i++) {
             Client* enemy = static_cast<Client*>(new Client(factory));

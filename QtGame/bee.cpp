@@ -9,7 +9,7 @@ void Bee::Move(){
     if (right && _x + sizeX + _speed <= game.width()) {
         _x += _speed;
     }
-    if (up && _y - _speed >= 0) {
+    if (up && _y - _speed >= 10) {
         _y -= _speed;
     }
     if (down && _y + sizeY /*+ _speed*/ <= game.height()) {
