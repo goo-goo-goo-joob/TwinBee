@@ -22,21 +22,25 @@
 \section*{Постановка задачи}
 \addcontentsline{toc}{section}{Постановка задачи}
 
-Реализовать загрузку растровых изображений и переработать функционал отрисовки объектов таким образом, чтобы для отображения объектов использовались изображения. Окончательно доработать логику игры.
+Разработать и реализовать механизм таймера с использованием класса \textit{QTimer} библиотеки \textit{Qt}. Разработать и реализовать классы для создания меню приложения. Доработать полностью функционал игры. Реализовать возможность сохранения игры и последующего ее продолжения. Задействовать минимум два паттерна проектирования. Приложение должно содержать минимум два потока выполнения: использовать средства языка Си++ либо класс \textit{QThread} библиотеки \textit{Qt}. Результатом данной лабораторной работы должно являться полноценное графическое приложение.
 
 
 \newpage
 
 \section{Основная часть}
 \subsection{Общая идея решения задачи}
-В работе была реализована отрисовка объектов с помощью растровых изображений вместо геометрических фигур, используя класс \textit{QImage}. Была завершена разработка логики игры: появилась возможность отображать счет и количество жизней на экране, обработка столкновений пчелы и врагов. Был улучшен механизм взаимодействий объектов.
+В данной работе для создания меню приложения были использованы средства библиотеки \textit{Qt}: классы \textit{QMenu} и \textit{QAction}. Был полностью доработан функционал игры: появилась возможность сохранения игры, продолжения последней сохраненной игры; возможность случайной генерации облаков и генерации врагов с помощью файла; появились переключения между уровнями, отработан механизм проигрыша и запуска новой игры. Функция обработки столкновений была вынесена в отдельный поток.
+
+Для выполнения задачи был использован механизм таймера, реализованный в 3 лабораторной работе. Также в 3 лабораторной работе были реализованы паттерны проектирования: адаптер и одиночка.
 
 \subsection{Структура и принципы действия}
-В классе конкретного посетителя \textit{DrawGameItems} был изменен механизм отрисовки объектов (функция \textit{visit}). С помощью класса \textit{QImage} и его методов \textit{load} и \textit{scaled} было загружено растровое изображение, которое масштабировалось под заданные размеры (в классе \textit{GameItem} появились поля \textit{sizeX} и \textit{sizeY} для хранения ширины и высоты объекта). Таким образом, объекты классов \textit{Bee}, \textit{Cloud}, \textit{Bell}, \textit{RedEnemy} и \textit{BlueEnemy} изображаются на экране с помощью выбранных картинок. Также был добавлен задний фон и установлены необходимые шрифты для отображения текста.
+В класс \textit{MainWindow} были добавлены поля \textit{QMenu} и \textit{QAction}, а в конструкторе класса был применен метод \textit{connect} для подключения сигнала нажатия кнопки из меню к необходимым слотам, которые также были добавлены в класс \textit{MainWindow}. В меню находится кнопка \textit{Help} (содержит информацию об игре), \textit{Save game} (сохраняет текущую игру) и \textit{New game} (начинает игру сначала). Также для элементов меню \textit{Save game} и \textit{New game} реализован механизм горячих клавиш. 
 
-В классе \textit{Game} была улучшена функция \textit{Collide}, обрабатывающая столкновения объектов: стали использоваться поля \textit{sizeX} и \textit{sizeY} для расчета столкновений, была добавлена обработка взаимодействия врагов и пчелы; при их столкновении у пчелы отнимается жизнь, при этом количество жизней не может быть отрицательным? и потеря жизни не может происходить чаще заданного времени \textit{lifeTime}. Данный алгоритм описан в классе \textit{Bee} в функциях \textit{Update} и \textit{SubLifes}.
+Возможность сохранения игры была реализована с помощью добавления дополнительного \textit{ini}-файла (\textit{"settings\_saved.ini"}) с записанными во время игры настройками. При запуске игры вызывется окно с сообщением (используется класс \textit{QMessageBox}), если существует файл с сохраненными настройками. С помощью стандартного механизма кнопок \textit{Ok} и \textit{Cancel} пользователю предоставляется возможность начать новую игру или загрузить последнюю сохраненную. Класс Initialization был незначительно изменен для реализации возможности записи в файл "\textit{settings\_saved.ini}".
 
-Был доработан механизм окончания игры: когда количество жизней достигает 0, то игра останавливается (перестает производиться обработка нажатий и отрисовка), выводится надпись \textit{"Game over"}.
+Возможность случайной генерации облаков была добавлена в функцию \textit{Update} класса \textit{Game}, используя класс \textit{Notifer}, в котором был разработан механизм таймера. Методы \textit{setLevel1} и \textit{setLevel2} позволяют считывать из файла информацию о типе и количестве врагов, которых необходимо будет сгенерировать. Функции записывают считанную информацию в очередь \textit{box}. Также был написан новый метод класса \textit{Game} \textit{fromTheBox}: он позволяет брать информацию из поля \textit{box} и генерировать необходимое количество врагов заданного типа в соответствии с механизмом таймера. Когда очередь \textit{box} для уровня 1 опустошается, то происходит переключение между уровнями, выводится необходимая надпись и запускается метод \textit{setLevel2}. Когда количество жизней достигает 0, то игра останавливается и выводится соответствующая надпись.
+
+Для вынесения функции обработки столкновений в отдельный поток был реализован класс \textit{Worker} (наследуется от \textit{QObject}) c механизмом слотов и сигналов: слот \textit{doWork} непосредственно обрабатывает столкновения, после выполнения слот выбрасывает сигнал \textit{resultReady}. В самом классе \textit{Game} используется экземпляр класса \textit{QThread} \textit{workerThread}, который запускается в конструкторе и останавливается в деструкторе. Класс \textit{Game} также наследуется от \textit{QObject}, что позволяет добавить механизм слотов (\textit{handleResults}) и сигналов (\textit{operate}). Теперь вместо функции \textit{collide} будет вызыветься сигнал \textit{operate} (с помощью функции \textit{connect} соединен со слотом класса \textit{Worker}, а сигнал \textit{resultReady} - со слотом \textit{handleResults}).
 
 \begin{figure}[H]
 	\centering
@@ -52,12 +56,13 @@
 \subsection{Процедура получения исполняемых программных модулей}
 Программный код был скомпилирован с среде \textit{Qt Creator}. Компиляция раздельная: исходный код программы разделён на несколько файлов. Никаких дополнительных ключей не добавлялось, использовались ключи, которые добавляются по умолчанию. Параметры сборки: компилятор С++ MinGW 4.8.2, профиль Qt: Qt 4.8.7, отладчик GDB.
 \subsection{Результаты тестирования}
-Тестирование программы представлено в файле \textit{"main.cpp"} в функции \textit{Main()}. Ожидаемая отрисовка объектов в окне \textit{MainWindow}:
+Тестирование программы представлено в файле \textit{"main.cpp"} в функции \textit{Main()}. Ожидаемая отрисовка объектов:
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{test.jpg}
-	\caption{Результат тестирования}	
+	\includegraphics[]{test1.jpg}
+	\includegraphics[width=\linewidth]{test2.jpg}
+	\caption{Результаты тестирования}	
 \end{figure}
 
 \newpage
@@ -72,66 +77,67 @@
 \end{center}
 \renewcommand{\subsection}{\Asbuk{section}.\arabic{subsection}}
 \setcounter{subsection}{1} 
-\textbf{\subsection{  - MainWindow.cpp}}
-\addcontentsline{toc}{subsection}{MainWindow.cpp}
-\begin{lstlisting}
-MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent),
-	ui(new Ui::MainWindow)
-{
-	ui->setupUi(this);
-	Game& game = Game::Instance();
-	this->setFixedSize(game.width(),game.height());
-	Notifer::Instance().Subscribe(this);
-	QPixmap bkgnd("images/back.png");
-	bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-	QPalette palette;
-	palette.setBrush(QPalette::Background, bkgnd);
-	this->setPalette(palette);
-	QFont f( "Arial", 15, QFont::Bold);
-
-	score = new QLabel(this);
-	score->setFrameStyle(QFrame::Sunken);
-	score->setGeometry(QRect(10,30,200,20));
-	score->setStyleSheet("QLabel {color : white; }");
-	score->setFont( f);
-	lifes = new QLabel(this);
-	lifes->setFrameStyle(QFrame::Sunken);
-	lifes->setGeometry(QRect(10,10,200,20));
-	lifes->setStyleSheet("QLabel {color : white; }");
-	lifes->setFont( f);
-
-	QFont f1( "Arial", 30, QFont::Bold);
-	over = new QLabel(this);
-	over->setFrameStyle(QFrame::Sunken);
-	over->setGeometry(QRect(game.width()*0.36,game.height()/2,220,30));
-	over->setStyleSheet("QLabel {color : white; }");
-	over->setFont( f1);
-};
-\end{lstlisting}
-
-\setcounter{subsection}{2} 
-\textbf{\subsection{  - MainWindow.h}}
-\addcontentsline{toc}{subsection}{MainWindow.h}
-\lstinputlisting[language=C++]{versions/lab4/code/mainwindow.h}
-
-\setcounter{subsection}{3} 
-\textbf{\subsection{  - GameItem.cpp}}
-\addcontentsline{toc}{subsection}{GameItem.cpp}
-\lstinputlisting[language=C++]{versions/lab4/code/GameItem.cpp}
-
-\setcounter{subsection}{4} 
 \textbf{\subsection{  - Game.h}}
 \addcontentsline{toc}{subsection}{Game.h}
-\lstinputlisting[language=C++]{versions/lab4/code/Game.h}
+\lstinputlisting[language=C++]{../QtGame/Game.h}
+
+\setcounter{subsection}{2} 
+\textbf{\subsection{  - Game.cpp}}
+\addcontentsline{toc}{subsection}{Game.cpp}
+\lstinputlisting[language=C++]{../QtGame/Game.cpp}
+
+\setcounter{subsection}{3} 
+\textbf{\subsection{  - GameItem.h}}
+\addcontentsline{toc}{subsection}{GameItem.h}
+\begin{lstlisting}
+	QMutex mutex;
+public:
+int X(){
+	mutex.lock();
+	auto temp = _x;
+	mutex.unlock();
+	return temp;
+}
+int Y(){
+	mutex.lock();
+	auto temp = _y;
+	mutex.unlock();
+	return temp;
+}
+void X( int x ){
+	mutex.lock();
+	_x = x;
+	mutex.unlock();
+}
+void Y( int y ){
+	mutex.lock();
+	_y = y;
+	mutex.unlock();
+}
+\end{lstlisting}
+
+\setcounter{subsection}{4} 
+\textbf{\subsection{  - MainWindow.h}}
+\addcontentsline{toc}{subsection}{MainWindow.h}
+\lstinputlisting[language=C++]{../QtGame/MainWindow.h}
+
+\setcounter{subsection}{4} 
+\textbf{\subsection{  - MainWindow.cpp}}
+\addcontentsline{toc}{subsection}{MainWindow.cpp}
+\lstinputlisting[language=C++]{../QtGame/MainWindow.cpp}
 
 \setcounter{subsection}{5} 
-\textbf{\subsection{  - Bee.h}}
-\addcontentsline{toc}{subsection}{Bee.h}
-\lstinputlisting[language=C++]{versions/lab4/code/Bee.h}
+\textbf{\subsection{  - Main.cpp}}
+\addcontentsline{toc}{subsection}{main.cpp}
+\lstinputlisting[language=C++]{../QtGame/main.cpp}
 
 \setcounter{subsection}{6} 
-\textbf{\subsection{  - Bee.cpp}}
-\addcontentsline{toc}{subsection}{Bee.cpp}
-\lstinputlisting[language=C++]{versions/lab4/code/Bee.cpp}
+\textbf{\subsection{  - Level1.txt}}
+\addcontentsline{toc}{subsection}{level1.txt}
+\lstinputlisting[language=C++]{../QtGame/level1.txt}
+
+\setcounter{subsection}{7} 
+\textbf{\subsection{  - Level2.txt}}
+\addcontentsline{toc}{subsection}{level2.txt}
+\lstinputlisting[language=C++]{../QtGame/level2.txt}
 \end{document} % конец документа

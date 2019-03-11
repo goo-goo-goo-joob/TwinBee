@@ -7,6 +7,8 @@ class Bell :
     public FlyingObj
 {
     int _score;
+    int _x0;
+    int _y0;
 public:
     int moveType;
     int start;
@@ -15,14 +17,14 @@ public:
         Notifer::Instance().Unsubscribe(this);
     }
     void access(Visitor &v) override {
-        v.visit(*this);
+          v.visit(*this);
     }
     void Move(const Notifer& n){
-        _x += 0.05 * (n.getStage() - start) * cos(1.5);
-        _y -= 0.05 * (n.getStage() - start) * sin(1.5) - 0.001 * (n.getStage() - start)*(n.getStage() - start);
+        _x =  _x0 + 10.0 * (float)(n.getStage() - start) / (float)n.getPeriod();
+        _y -= (0.3 - ((float)n.getStage() - (float)start) / (float)n.getPeriod()) * 3.0;
     }
     void Move1(const Notifer& n){
-        _y -= 0.05 * (n.getStage() - start) - 0.001 * (n.getStage() - start)*(n.getStage() - start);
+        _y -= (0.3 - ((float)n.getStage() - (float)start) / (float)n.getPeriod()) * 3.0;
     }
     void Update(const Notifer& n) override{
         if (!moveType)

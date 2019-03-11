@@ -5,10 +5,28 @@
 #include "Bell.h"
 #include "flyingobj.h"
 #include "initialization.h"
-
-
-class Game : public Observer
+#include <QThread>
+#include <QMetaType>
+#include <QQueue>
+class Game;
+class Worker : public QObject
 {
+    Q_OBJECT
+    QThread workerThread;
+
+public slots:
+    void doWork();
+
+signals:
+    void resultReady();
+};
+
+class Game : public QObject, public Observer
+{
+    Q_OBJECT
+    QThread workerThread;
+    int lastUpd;
+    int updTime;
     Game(){
         Initialization& ini = Initialization::Instance();
         _level = ini.Sett("setgame/level", 1);
@@ -28,14 +46,23 @@ class Game : public Observer
         if (_score < 0){
             _score = 0;
         }
-        setLevel1();
+        lastUpd = -1;
+        updTime = 80;
+        bee = new Bee();
+        if (_level == 2)
+            setLevel2();
+        else
+            setLevel1();
         Notifer::Instance().Subscribe(this);
+
+        Worker *worker = new Worker;
+        worker->moveToThread(&workerThread);
+        connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        connect(this, SIGNAL(operate()), worker, SLOT(doWork()));
+        connect(worker, SIGNAL(resultReady()), this, SLOT(handleResults()));
+        workerThread.start();
     }
     ~Game(){
-        Initialization& ini = Initialization::Instance();
-        ini.Save("setgame", "level", 1);
-        ini.Save("setgame", "score", _score);
-        ini.Save("logs", "no logs", 1);
         delete bee;
         for (auto it = items.begin(); it != items.end(); it++) {
             delete *it;
@@ -52,6 +79,13 @@ class Game : public Observer
             bulls.erase(it);
             it--;
         }
+        for (auto it = bells.begin(); it != bells.end(); it++) {
+            delete *it;
+            bells.erase(it);
+            it--;
+        }
+        workerThread.quit();
+        workerThread.wait();
     }
     Game(Game const&) = delete;
     Game& operator= (Game const&) = delete;
@@ -59,60 +93,66 @@ class Game : public Observer
     int _score;
     bool _play;
     int _level;
+
+public slots:
+    void handleResults() {}
+signals:
+    void operate();
+
 public:
     Bee *bee;
     QVector<FlyingObj*> bulls;
     QVector<Cloud*> items;
     QVector<Client*> enemes;
     QVector<Bell*> bells;
-    void Collide(){
-        for (auto b: bulls){
-            for (auto i: enemes){
-                if (b->X() > i->e->X() /*+ 25*/ && b->X() + 10 < i->e->X() + 25 &&
-                        b->Y() < i->e->Y() + 25 && b->Y() + 10 > i->e->Y()){
-                    i->e->_play = false;
-                    b->_play = false;
-                    _score += i->e->score();
-                }
-            }
-        }
-        for (auto b: bulls){
-            for (auto i: items){
-                if (b->X() > i->X() /*+ 25*/ && b->X() + 10 < i->X() + 50 &&
-                        b->Y() < i->Y() + 30 && b->Y() + 10 > i->Y()){
-                    if(i->haveBell){
-                        i->haveBell = false;
-                        //_score += i->score();
-                        bells.push_back(new Bell(i->X() + 15, i->Y()));
+    QQueue<QVector<int>> box;
+    void Collide(const Notifer& n){
+        operate();
+    }
+    void fromTheBox(){
+        Notifer &n = Notifer::Instance();
+        if(n.getStage() - lastUpd >= updTime){
+            lastUpd = n.getStage();
+            if(!box.isEmpty()){
+                QVector<int> tmp;
+                tmp = box.takeFirst();
+                switch (tmp[0]){
+                case 0:
+                {
+                    EnemyFactory *factory = new RedEnemyFactory;
+                    for (int i = 0; i < tmp[1]; i++) {
+                        Client* enemy = static_cast<Client*>(new Client(factory));
+                        enemes.push_back(enemy);
                     }
-                    b->_play = false;
+                    break;
+                }
+                case 1:
+                {
+                    EnemyFactory *factory = new BlueEnemyFactory;
+                    for (int i = 0; i < tmp[1]; i++) {
+                        Client* enemy = static_cast<Client*>(new Client(factory));
+                        enemes.push_back(enemy);
+                    }
+                    break;
+                }
                 }
             }
-        }
-        for (auto b: bulls){
-            for (auto i: bells){
-                if (b->X() > i->X() /*+ 25*/ && b->X() + 10 < i->X() + 15 &&
-                        b->Y() < i->Y() + 15 && b->Y() + 10 > i->Y()){
-                    i->moveType = 1;
-                    i->start = Notifer::Instance().getStage();
-                    b->_play = false;
-                }
-            }
-        }
-        for (auto i: bells){
-            if (i->X() > bee->X() /*+ 25*/ && i->X() + 15 < bee->X() + 25 &&
-                    i->Y() < bee->Y() + 25 && i->Y() + 15 > bee->Y()){
-                _score += i->score();
-                i->_play = false;
+            else {
+                setLevel2();
             }
         }
     }
     void Update(const Notifer& n) {
-        Collide();
+        Collide(n);
+        if (n.getStage() % (7 * n.getPeriod()) == 0){
+            items.push_back(static_cast<Cloud*>(new Cloud));
+        }
+        fromTheBox();
     }
     void setLevel1(){
-        bee = new Bee();
-        EnemyFactory *factory = new BlueEnemyFactory;
+        _level = 1;
+
+        EnemyFactory *factory = new RedEnemyFactory;
         for (int i = 0; i < 3; i++) {
             Client* enemy = static_cast<Client*>(new Client(factory));
             enemes.push_back(enemy);
@@ -122,6 +162,44 @@ public:
             items.push_back(item);
         }
         delete factory;
+
+        QFile file("level1.txt");
+        if ((file.open(QIODevice::ReadOnly)))
+        {
+            while(!file.atEnd())
+            {
+                QVector<int> tmp;
+                QString s = file.readLine();
+                tmp.push_back(s.split(" ")[0].toInt());//type of enemy
+                tmp.push_back(s.split(" ")[1].toInt());//number of enemies
+                box.append(tmp);
+            }
+            file.close();
+        }
+    }
+    void setLevel2(){
+        _level = 2;
+
+        QFile file("level2.txt");
+        if ((file.open(QIODevice::ReadOnly)))
+        {
+            while(!file.atEnd())
+            {
+                QVector<int> tmp;
+                QString s = file.readLine();
+                tmp.push_back(s.split(" ")[0].toInt());//type of enemy
+                tmp.push_back(s.split(" ")[1].toInt());//number of enemies
+                box.append(tmp);
+            }
+            file.close();
+        }
+    }
+    void Save(){
+        Initialization& ini = Initialization::Instance();
+        ini.Save("setgame", "level", _level);
+        ini.Save("setgame", "score", _score);
+        ini.Save("setgame", "lifes", bee->Lifes());
+        ini.Save("logs", "no logs", 1);
     }
     void Clear(){
         for (auto it = bulls.begin(); it != bulls.end(); it++) {
@@ -132,7 +210,7 @@ public:
             }
         }
         for (auto it = enemes.begin(); it != enemes.end(); it++) {
-            if (!(*it)->e->isIn() || !(*it)->e->_play){//((*it)->army)->isIn())
+            if (!(*it)->e->isIn() || !(*it)->e->_play){
                 delete *it;
                 enemes.erase(it);
                 it--;

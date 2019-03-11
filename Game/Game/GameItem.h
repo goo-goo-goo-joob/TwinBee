@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QMainWindow>
 #include "observer.h"
+#include <QMutex>
 
 class Bee;
 class Cloud;
@@ -29,6 +30,9 @@ class GameItem: public Observer
 {
 protected:
     int _x, _y, _speed;
+    int sizeX;
+    int sizeY;
+    QMutex mutex;
 public:
     bool _play;
     GameItem(){
@@ -36,16 +40,42 @@ public:
         _x = 0;
         _y = 0;
         _speed = 0;
+        sizeX = 0;
+        sizeY = 0;
     }
     virtual void access(Visitor &v) = 0;
     virtual ~GameItem() = 0;
     //virtual void Move() = 0;
     bool isIn();
-    int X(){ return _x;}
-    int Y(){ return _y;}
+    int X(){
+        mutex.lock();
+        auto temp = _x;
+        mutex.unlock();
+        return temp;
+    }
+    int Y(){
+        mutex.lock();
+        auto temp = _y;
+        mutex.unlock();
+        return temp;
+    }
     int speed() {return _speed;}
-    void X( int x ){ _x = x;}
-    void Y( int y ){ _y = y;}
+    void X( int x ){
+        mutex.lock();
+        _x = x;
+        mutex.unlock();
+    }
+    void Y( int y ){
+        mutex.lock();
+        _y = y;
+        mutex.unlock();
+    }
+    int SizeX(){
+        return sizeX;
+    }
+    int SizeY(){
+        return sizeY;
+    }
 };
 
 //concrete visitor
@@ -53,8 +83,19 @@ class DrawGameItems:
         public Visitor{
 private:
     QMainWindow *e;
+    QImage bee;
+    QImage cloud;
+    QImage bell;
+    QImage red;
+    QImage blue;
 public:
-    DrawGameItems(QMainWindow *event): e(event){}
+    DrawGameItems(QMainWindow *event): e(event){
+        bee.load("images/Bee.png");
+        cloud.load("images/cloud.png");
+        bell.load("images/bell.png");
+        red.load("images/Putan.png");
+        blue.load("images/Tobikame.png");
+    }
     void visit(Bee &b)override ;
     void visit(Cloud &c) override;
     void visit(FlyingObj &f) override;
@@ -62,14 +103,3 @@ public:
     void visit(RedEnemy &r) override;
     void visit(BlueEnemy &b) override;
 };
-
-//concrete visitor
-//class MoveGameItems:
-//        public Visitor{
-//public:
-//    void visit(Bee &b)override;
-//    void visit(Cloud &c) override{}
-//    void visit(FlyingObj &f) override{}
-//    void visit(RedEnemy &r) override{}
-//    void visit(BlueEnemy &b) override{}
-//};

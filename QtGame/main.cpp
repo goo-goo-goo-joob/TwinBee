@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     if (QFile::exists(saved)){
 
         QMessageBox msgBox;
+        msgBox.setWindowTitle("Loading..");
         msgBox.setText("Load saved game?");
         msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
         msgBox.setDefaultButton(QMessageBox::Ok);

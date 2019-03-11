@@ -5,9 +5,9 @@
 class Bee :
     public GameItem
 {
-private:
-    int sizeX;
-    int sizeY;
+    int _lifes;
+    int lastShoot;
+    int lifeTime;
 public:
     bool right, left, up, down;
     Bee(){
@@ -24,26 +24,31 @@ public:
         if (_speed < 0){
             _speed = 0;
         }
-        sizeX = 25;
-        sizeY = 25;
+        _lifes = ini.Sett("setgame/lifes");
+        if (_lifes < 0){
+            _lifes = 0;
+        }
+        sizeX = 60;
+        sizeY = 53;
         right= false;
         left= false;
         up= false;
         down= false;
-        //_notifer->Subscribe(this);
+        lastShoot = -1;
+        lifeTime = 20;
     }
-    int SizeX(){
-        return sizeX;
-    }
-    int SizeY(){
-        return sizeY;
-    }
-    ~Bee(){
-        //_notifer->Unsubscribe(this);
-    }
+    ~Bee(){}
     void access(Visitor &v) override {
         v.visit(*this);
       }
     void Move();
-    void Update(const Notifer& n) override {}
+    void Update(const Notifer& n) override {
+        if(n.getStage() - lastShoot >= lifeTime){
+            lastShoot = n.getStage();
+            SubLifes();
+        }
+    }
+    void SubLifes();
+    int Lifes() {return _lifes;}
+    void Lifes(int lifes){_lifes = lifes;}
 };

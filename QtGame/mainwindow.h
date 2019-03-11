@@ -44,19 +44,13 @@ public:
             }
         }
         else{
-            //if (lastLevel != game.level()){
-                lastLevel = game.level();
-                lastLevelStartTime = n.getStage();
-                isShown = true;
-                over -> setText(QString("Game over"));
-                game.score(0);
-                game.level(1);
-                game.Save();
-            //}
-            //else if(isShown && (n.getStage() - lastLevelStartTime) > (n.getPeriod() * 3)){
-            //    isShown = false;
-            //    over -> setText(QString(""));
-            //}
+            lastLevel = game.level();
+            lastLevelStartTime = n.getStage();
+            isShown = true;
+            over -> setText(QString("Game over"));
+            game.score(0);
+            game.level(1);
+            game.Save();
         }
         score -> setText(QString("Score: %1").arg(game.score()));
         lifes -> setText(QString("Lifes: %1").arg(game.bee->Lifes() ));
@@ -76,8 +70,6 @@ private:
     QAction *AboutAct;
     QAction *SaveAct;
     QAction *NewAct;
-    //void createActions();
-    //void createMenus();
 public slots:
     void About();
     void Save();

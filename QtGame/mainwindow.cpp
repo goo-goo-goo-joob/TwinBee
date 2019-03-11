@@ -5,8 +5,6 @@
 #include <QMenuBar>
 #include "observer.h"
 
-
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -62,17 +60,12 @@ MainWindow::MainWindow(QWidget *parent) :
     HelpMenu->addAction(SaveAct);
     HelpMenu->addAction(NewAct);
     shootID = 0;
-
-
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
