@@ -330,3 +330,11 @@ ASALocalRun/
 .mfractor/
 
 *.exe
+
+*.toc
+
+*.gz
+
+*.out
+
+*.aux
