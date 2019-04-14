@@ -92,7 +92,8 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event){
 
 void MainWindow::About(){
     QMessageBox::about(this, tr("About"),
-                       tr("The Game rules!\nSimply press on buttons"));
+                       tr("The Game rules:\nSpace - shoot\nLeft arrow - move left\n"
+                          "Right arrow - move right\nUp arrow - move up\nDown arrow - move down\n"));
 }
 
 void MainWindow::Save(){
